@@ -151,7 +151,6 @@
         android:background="@drawable/sel_common_item_bg"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
-        android:visibility="gone"
         >
 
         <LinearLayout

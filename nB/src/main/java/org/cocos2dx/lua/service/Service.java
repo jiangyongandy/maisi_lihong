@@ -58,7 +58,7 @@ public class Service {
         if (commonApi == null) {
             initOkHttp();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://39.108.151.95:8000/MyApp/")
+                    .baseUrl("http://39.108.151.95:8000/App/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addConverterFactory(new StringConverterFactory())
@@ -73,7 +73,7 @@ public class Service {
         if (commonApi2 == null) {
             initOkHttp();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://39.108.151.95:8000/MyApp/")
+                    .baseUrl("http://39.108.151.95:8000/App/")
                     .client(okHttpClient)
                     .addConverterFactory(new StringConverterFactory())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

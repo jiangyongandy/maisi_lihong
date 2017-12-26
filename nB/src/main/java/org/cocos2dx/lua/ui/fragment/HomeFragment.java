@@ -132,7 +132,7 @@ public class HomeFragment extends BaseFragment {
 
                                 Toast.makeText(
                                         APPAplication.instance,
-                                        "分享成功" + result,
+                                        "分享获得积分-----" + result,
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(

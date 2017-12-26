@@ -87,7 +87,7 @@ public class ChargeActivity extends BaseActivity {
 
                         CalcuPayEntity entity = new CalcuPayEntity();
                         entity.setAmount(Double.parseDouble(list.get(0).getValue1()));
-                        entity.setPoints(0);
+                        entity.setPoints(VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft());
                         Gson gson = new Gson();
                         String toJson = gson.toJson(entity);
                         RequestBody body = RequestBody.create(MediaType.parse("application/json"), toJson);
@@ -112,7 +112,7 @@ public class ChargeActivity extends BaseActivity {
 
         if(currentPay != 0 ) {
 
-            UserModel.getInstance().requestCharge(this, currentPay, 0, mEtRecommendNum.getText().toString());
+            UserModel.getInstance().requestCharge(this, currentPay, VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft(), mEtRecommendNum.getText().toString());
         }else {
             Toast.makeText(
                     APPAplication.instance,

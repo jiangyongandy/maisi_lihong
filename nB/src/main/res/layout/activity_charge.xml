@@ -241,7 +241,6 @@
                 android:text="积分抵现后仅需支付："
                 android:textColor="#313131"
                 android:textSize="14sp"
-                android:visibility="gone"
                 />
 
             <TextView
