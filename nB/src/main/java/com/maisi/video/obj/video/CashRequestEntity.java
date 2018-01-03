@@ -13,6 +13,7 @@ public class CashRequestEntity implements Serializable {
     private double maisibi;
     private String payeeAccount;
     private double amount;
+    private String pyeeRealName;
 
     public String getUid() {
         return uid;
@@ -44,5 +45,13 @@ public class CashRequestEntity implements Serializable {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getPyeeRealName() {
+        return pyeeRealName;
+    }
+
+    public void setPyeeRealName(String pyeeRealName) {
+        this.pyeeRealName = pyeeRealName;
     }
 }

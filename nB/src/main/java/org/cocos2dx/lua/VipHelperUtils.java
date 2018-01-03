@@ -1,16 +1,13 @@
 package org.cocos2dx.lua;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.maisi.video.obj.WeiChatUserInfo;
 import com.maisi.video.obj.video.PlayLineEntity;
-import com.maisi.video.obj.video.RecommendEntity;
+import com.maisi.video.obj.video.UserInfoEntity;
 import com.tencent.smtt.sdk.WebView;
 import com.zuiai.nn.R;
-import com.maisi.video.obj.WeiChatUserInfo;
-import com.maisi.video.obj.video.UserInfoEntity;
 
 import org.cocos2dx.lua.service.Service;
 
@@ -19,9 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by JIANG on 2017/9/16.
@@ -32,7 +26,7 @@ public class VipHelperUtils {
     public static VipHelperUtils instance;
 
     public static String shareDescription = "我发现了一个可以破解全网VIP视频的APP，不用充钱享会员，满满黑科技⊙ω⊙。下载地址：http://39.108.151.95:8000/MyApp/apk/nB-release.apk";
-    public static String shareLink = "http://39.108.151.95:8000/MyApp/apk/nB-release.apk";
+    public static String shareLink = "http://39.108.151.95:8000/MyApp/apk/nB-release2.apk";
 
     //接口地址
     public static String api1 = "https://api.47ks.com/webcloud/?v=";

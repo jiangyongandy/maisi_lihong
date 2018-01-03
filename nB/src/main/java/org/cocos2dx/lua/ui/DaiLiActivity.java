@@ -71,6 +71,8 @@ public class DaiLiActivity extends BaseActivity {
     private RecommendEntity result;
     private EditText  amountInput;
     private EditText  transferAccount;
+    private EditText payAccount;
+    private EditText payName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,52 +367,60 @@ public class DaiLiActivity extends BaseActivity {
             return;
         }
 
-        new MaterialDialog.Builder(this)
-                .title("输入支付宝账号")
-                .content("请确认输入正确哦")
-                .input("请填写正确", "", new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
+        MaterialDialog dialog =
+                new MaterialDialog.Builder(this)
+                        .title("输入支付宝账号")
+                        .customView(R.layout.dialog_input_transfer2, true)
+                        .positiveText("确定")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                String payAccountS = payAccount.getText().toString();
+                                String payNameS = payName.getText().toString();
+                                if ( payAccountS.length() == 0 || payNameS.length() == 0 ) {
+                                    Toast.makeText(
+                                            APPAplication.instance,
+                                            "请确定账号和实名填写完整~~",
+                                            Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                CashRequestEntity entity = new CashRequestEntity();
+                                entity.setUid(VipHelperUtils.getInstance().getVipUserInfo().getUid());
+                                entity.setAmount(DaiLiActivity.this.result.getCommend2cash());
+                                entity.setMaisibi(VipHelperUtils.getInstance().getVipUserInfo().getCommendLeft());
+                                entity.setPayeeAccount(payAccountS);
+                                entity.setPyeeRealName(payNameS);
+                                Gson gson = new Gson();
+                                String toJson = gson.toJson(entity);
+                                RequestBody body = RequestBody.create(MediaType.parse("application/json"), toJson);
+                                Service.getComnonServiceForString().alitransfer(body)
+                                        .compose(BoyiRxUtils.<String>applySchedulers())
+                                        .subscribe(new BoyiRxUtils.MySubscriber<String>() {
 
-                        if (input == null || input.length() == 0) {
-                            Toast.makeText(
-                                    APPAplication.instance,
-                                    "请先输入提现账号~~",
-                                    Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        CashRequestEntity entity = new CashRequestEntity();
-                        entity.setUid(VipHelperUtils.getInstance().getVipUserInfo().getUid());
-                        entity.setAmount(DaiLiActivity.this.result.getCommend2cash());
-                        entity.setMaisibi(VipHelperUtils.getInstance().getVipUserInfo().getCommendLeft());
-                        entity.setPayeeAccount(input.toString());
-                        Gson gson = new Gson();
-                        String toJson = gson.toJson(entity);
-                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), toJson);
-                        Service.getComnonServiceForString().alitransfer(body)
-                                .compose(BoyiRxUtils.<String>applySchedulers())
-                                .subscribe(new BoyiRxUtils.MySubscriber<String>() {
+                                            @Override
+                                            public void onNext(String result) {
+                                                if (result.equals("success")) {
 
-                                    @Override
-                                    public void onNext(String result) {
-                                        if (result.equals("success")) {
+                                                    Toast.makeText(
+                                                            APPAplication.instance,
+                                                            "提现成功",
+                                                            Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(
+                                                            APPAplication.instance,
+                                                            "提现失败",
+                                                            Toast.LENGTH_SHORT).show();
 
-                                            Toast.makeText(
-                                                    APPAplication.instance,
-                                                    "提现成功",
-                                                    Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(
-                                                    APPAplication.instance,
-                                                    "提现失败",
-                                                    Toast.LENGTH_SHORT).show();
-
-                                        }
-                                        UserModel.getInstance().refreshUserInfo();
-                                    }
-                                });
-                    }
-                }).show();
+                                                }
+                                                UserModel.getInstance().refreshUserInfo();
+                                            }
+                                        });
+                            }
+                        })
+                        .build();
+        dialog.show();
+        payAccount = dialog.getCustomView().findViewById(R.id.et_pay_account);
+        payName = dialog.getCustomView().findViewById(R.id.et_pay_name);
     }
 
 
