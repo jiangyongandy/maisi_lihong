@@ -39,6 +39,7 @@ import com.zuiai.nn.R;
 
 import org.cocos2dx.lua.CommonConstant;
 import org.cocos2dx.lua.DataHelper;
+import org.cocos2dx.lua.Logger;
 import org.cocos2dx.lua.VipHelperUtils;
 
 import java.net.MalformedURLException;
@@ -362,8 +363,10 @@ public class BrowserActivity extends BaseActivity  {
                 .getPath());
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        //默认移动UA
-        webSetting.setUserAgentString("User-Agent: MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+        if (mIntentUrl == null) {
+            //默认移动UA
+            webSetting.setUserAgentString("User-Agent: MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+        }
         //优酷，土豆，芒果PC_UA
         switch (VipHelperUtils.getInstance().getCurrentPosition()) {
             case 3:
@@ -380,6 +383,7 @@ public class BrowserActivity extends BaseActivity  {
             mWebView.loadUrl(mHomeUrl);
         } else {
             mWebView.loadUrl(mIntentUrl.toString());
+            Logger.showLog("-----------" + mIntentUrl.toString(),"webView load url ---");
         }
         TbsLog.d("time-cost", "cost time: "
                 + (System.currentTimeMillis() - time));
@@ -406,6 +410,9 @@ public class BrowserActivity extends BaseActivity  {
         mHome.setEnabled(false);
 
 
+        if (mIntentUrl != null) {
+            mPlayerBtn.setVisibility(View.GONE);
+        }
         if (!CommonConstant.isRelease) {
             mPlayerBtn.setVisibility(View.GONE);
         }

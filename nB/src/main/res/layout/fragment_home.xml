@@ -165,7 +165,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/sel_common_item_bg"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:visibility="gone"
+                    >
 
                     <ImageView
                         android:layout_width="40dp"

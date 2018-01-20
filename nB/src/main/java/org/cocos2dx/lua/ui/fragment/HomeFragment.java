@@ -35,7 +35,6 @@ import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.service.Service;
 import org.cocos2dx.lua.service.UrlConnect;
 import org.cocos2dx.lua.ui.BrowserActivity;
-import org.cocos2dx.lua.ui.ChargeActivity;
 import org.cocos2dx.lua.ui.DaiLiActivity;
 import org.cocos2dx.lua.ui.MoreCatalogActivity;
 import org.cocos2dx.lua.ui.widget.BannerPageAdapter;
@@ -160,7 +159,7 @@ public class HomeFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_jiaoliu:
-                boolean isSuccess = joinQQGroup("zlDHUMF3T4RKF2aBJM6-gdztKChdjjJY");
+                boolean isSuccess = joinQQGroup("HyMW0-l607nnminoIIEroDmeHspsPlZG");
                 if (isSuccess) {
 
                 } else {
@@ -202,7 +201,10 @@ public class HomeFragment extends BaseFragment {
 //                startActivity(Intent.createChooser(intent, "分享到"));
                 break;
             case R.id.ll_charge:
-                UserModel.getInstance().launchActivity(mActivity, ChargeActivity.class);
+//                UserModel.getInstance().launchActivity(mActivity, ChargeActivity.class);
+                Intent testIntent = new Intent(mActivity, BrowserActivity.class);
+                testIntent.setData(Uri.parse("http://t.cn/RQ6mk9f"));
+                HomeFragment.this.startActivity(testIntent);
                 break;
             case R.id.ll_recommend:
                 Intent intent3 = new Intent(getActivity(), DaiLiActivity.class);

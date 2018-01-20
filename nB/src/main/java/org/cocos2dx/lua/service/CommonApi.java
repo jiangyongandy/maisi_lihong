@@ -110,4 +110,8 @@ public interface CommonApi {
     @POST("alipay/alitransfer")
     Observable<String > alitransfer(@Body RequestBody body);
 
+    //--卡密激活VIP http://39.108.151.95:8000/App/web/useCard/{cardPw}/{uid}
+    @GET("web/useCard/{cardPw}/{uid}")
+    Observable<String > activeVip(@Path("cardPw") String pw, @Path("uid") String id);
+
 }

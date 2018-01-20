@@ -2,6 +2,7 @@ package org.cocos2dx.lua.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +11,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.AppUtils;
 import com.bumptech.glide.Glide;
+import com.maisi.video.obj.video.UserInfoEntity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.zuiai.nn.R;
-import com.maisi.video.obj.video.UserInfoEntity;
 
 import org.cocos2dx.lua.APPAplication;
+import org.cocos2dx.lua.BoyiRxUtils;
 import org.cocos2dx.lua.CommonConstant;
 import org.cocos2dx.lua.EventBusTag;
+import org.cocos2dx.lua.ToastUtil;
 import org.cocos2dx.lua.VipHelperUtils;
 import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.service.Service;
-import org.cocos2dx.lua.ui.ChargeActivity;
 import org.cocos2dx.lua.ui.DaiLiActivity;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.ThreadMode;
@@ -199,7 +202,8 @@ public class PersonFragment2 extends LazyFragment {
                 wechatLogin();
                 break;
             case R.id.rl_charge:
-                UserModel.getInstance().launchActivity(mActivity, ChargeActivity.class);
+//                UserModel.getInstance().launchActivity(mActivity, ChargeActivity.class);
+                activeVip();
                 break;
             case R.id.rl_share:
                 if(!VipHelperUtils.getInstance().isWechatLogin()) {
@@ -249,5 +253,48 @@ public class PersonFragment2 extends LazyFragment {
 //            Log.v("weChat_login", "sendReq  sendReq ---------------true");
 //        }
         UserModel.getInstance().login(mActivity);
+    }
+
+    private void activeVip() {
+        if(!VipHelperUtils.getInstance().isWechatLogin()) {
+            ToastUtil.show(getContext(), "请先登录~~", Toast.LENGTH_SHORT);
+            return;
+        }
+        new MaterialDialog.Builder(getContext())
+                .title("卡密激活")
+                .content("请输入卡密")
+                .inputType(InputType.TYPE_CLASS_TEXT )
+                .input("推荐粘贴输入", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        // Do something
+                        if(input.length() <= 0) {
+                            ToastUtil.show(getContext(), "请先输入卡密~~", Toast.LENGTH_SHORT);
+                            return;
+                        }
+                        Service.getComnonServiceForString().activeVip(input.toString().trim(), VipHelperUtils.getInstance().getVipUserInfo().getUid())
+                                .compose(BoyiRxUtils.<String>applySchedulers())
+                                .subscribe(new BoyiRxUtils.MySubscriber<String>() {
+
+                                    @Override
+                                    public void onNext(String result) {
+                                        if (result.equals("faild")) {
+
+                                            Toast.makeText(
+                                                    APPAplication.instance,
+                                                    "激活失败，请检查是否输入正确或联系客服",
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(
+                                                    APPAplication.instance,
+                                                    "激活成功",
+                                                    Toast.LENGTH_SHORT).show();
+
+                                        }
+                                        UserModel.getInstance().refreshUserInfo();
+                                    }
+                                });
+                    }
+                }).show();
     }
 }
