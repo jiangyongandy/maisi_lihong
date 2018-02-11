@@ -73,6 +73,7 @@ public class PlayActivity extends BaseActivity  {
 
     private String mIntentUrl;
     private TextView mChangeLine;
+    private TextView mShare;
     private ViewGroup mViewMask;
     private View mAdView;
 //    private int resumeCount;
@@ -141,6 +142,7 @@ public class PlayActivity extends BaseActivity  {
     private void initProgressBar() {
         mPageLoadingProgressBar = (ProgressBar) findViewById(com.example.test_webview_demo.R.id.progressBar1);// new
         mChangeLine = (TextView) findViewById(com.example.test_webview_demo.R.id.tv_change_line);// new
+        mShare = (TextView) findViewById(com.example.test_webview_demo.R.id.tv_share);
         // ProgressBar(getApplicationContext(),
         // null,
         // android.R.attr.progressBarStyleHorizontal);
@@ -153,6 +155,16 @@ public class PlayActivity extends BaseActivity  {
             public void onClick(View v) {
                 VipHelperUtils.getInstance().changePlayLine(mWebView);
                 mViewMask.setVisibility(View.VISIBLE);
+            }
+        });
+        mShare.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse("" + VipHelperUtils.getInstance().getCurrentApi() + mIntentUrl);
+                intent.setData(content_url);
+                startActivity(Intent.createChooser(intent, "请选择浏览器"));
             }
         });
     }
