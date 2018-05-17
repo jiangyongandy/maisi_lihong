@@ -7,7 +7,7 @@
         android:id="@+id/iv_guide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/guide2"
+        android:src="@drawable/iv_guide2"
         android:scaleType="centerCrop"
         />
 

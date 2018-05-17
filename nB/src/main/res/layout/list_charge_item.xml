@@ -8,10 +8,12 @@
         android:id="@+id/ll_charge_catalog"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@drawable/selector_price_tab"
+        android:background="@drawable/ic_price"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:visibility="gone"
+        >
 
         <TextView
             android:id="@+id/tv_current_price"
@@ -34,4 +36,12 @@
 
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_price"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        />
 </FrameLayout>

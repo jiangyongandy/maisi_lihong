@@ -60,7 +60,9 @@
 -dontwarn javax.tools.**
 -dontwarn com.sun.**
 -dontwarn com.squareup.javapoet.**
-
+-keep public class javax.** { *; }
+-keep public class javax.xml.stream.**{ *; }
+-libraryjars <java.home>/lib/rt.jar
 #----------------------------------------------------------------------------
 
 #---------------------------------默认保留区---------------------------------
@@ -286,6 +288,12 @@
 -keep class com.blankj.utilcode.** { *; }
 -keepclassmembers class com.blankj.utilcode.** { *; }
 -dontwarn com.blankj.utilcode.**
+
+# (2)Simple XML
+-keep public class org.simpleframework.**{ *; }
+-keep class org.simpleframework.xml.**{ *; }
+-keep class org.simpleframework.xml.core.**{ *; }
+-keep class org.simpleframework.xml.util.**{ *; }
 
 #---------------------------------2.第三方SDK包-------------------------------
 

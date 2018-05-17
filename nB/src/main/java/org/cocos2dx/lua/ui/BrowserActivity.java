@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,12 +16,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.example.test_webview_demo.utils.X5WebView;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -41,6 +41,7 @@ import org.cocos2dx.lua.CommonConstant;
 import org.cocos2dx.lua.DataHelper;
 import org.cocos2dx.lua.Logger;
 import org.cocos2dx.lua.VipHelperUtils;
+import org.cocos2dx.lua.model.LiveModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -52,19 +53,12 @@ public class BrowserActivity extends BaseActivity  {
      */
     private X5WebView mWebView;
     private ViewGroup mViewParent;
-    private ImageButton mBack;
-    private ImageButton mForward;
-    private ImageButton mExit;
-    private ImageButton mHome;
     //    private Button mGo;
     private ImageView mPlayerBtn;
     private RelativeLayout mRlGuide;
 
-    private ImageButton mMore;
     private TextView mTvKnow;
-    //    private EditText mUrl;
-    //	private static final String mHomeUrl = "http://www.youku.com/v_feelist/pt_1.html";
-    private final String mHomeUrl = VipHelperUtils.getInstance().getURLbyPositon();
+    private String mHomeUrl;
 
     private static final String TAG = "SdkDemo";
     private static final int MAX_LENGTH = 14;
@@ -78,15 +72,23 @@ public class BrowserActivity extends BaseActivity  {
     private TextView mChangeLine;
     private boolean isPcUA;
     private String mobileUrl;
+    private boolean isLiveType;
+    private TextView mPlay;
+    private TextView mClose;
+    private View mNavGation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-
+        mHomeUrl = VipHelperUtils.getInstance().getURLbyPositon();
         Intent intent = getIntent();
         if (intent != null) {
             try {
+                if(intent.getIntExtra("SiteType", 0 ) == 2) {
+                    isLiveType = true;
+                    mHomeUrl = LiveModel.getInstance().getUrlByPosition();
+                }
                 mIntentUrl = new URL(intent.getData().toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -106,10 +108,6 @@ public class BrowserActivity extends BaseActivity  {
         } catch (Exception e) {
         }
 
-		/*
-         * getWindow().addFlags(
-		 * android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		 */
         setContentView(R.layout.activity_browse1);
         mViewParent = (ViewGroup) findViewById(R.id.webView1);
 
@@ -117,24 +115,6 @@ public class BrowserActivity extends BaseActivity  {
 
         mTestHandler.sendEmptyMessageDelayed(MSG_INIT_UI, 10);
 
-    }
-
-    private void changGoForwardButton(WebView view) {
-        if (view.canGoBack())
-            mBack.setAlpha(enable);
-        else
-            mBack.setAlpha(disable);
-        if (view.canGoForward())
-            mForward.setAlpha(enable);
-        else
-            mForward.setAlpha(disable);
-        if (view.getUrl() != null && view.getUrl().equalsIgnoreCase(mHomeUrl)) {
-            mHome.setAlpha(disable);
-            mHome.setEnabled(false);
-        } else {
-            mHome.setAlpha(enable);
-            mHome.setEnabled(true);
-        }
     }
 
     private void init() {
@@ -168,7 +148,7 @@ public class BrowserActivity extends BaseActivity  {
             public void onPageStarted(final WebView webView, String s, Bitmap bitmap) {
                 Log.i("onPageStarted", s);
                 super.onPageStarted(webView, s, bitmap);
-                if(isPcUA && !s.equals(mobileUrl)) {
+/*                if(isPcUA && !s.equals(mobileUrl)) {
                     Log.i("PC页面加载开始","--------------"+ s);
                     isPcUA = false;
                     webView.stopLoading();
@@ -180,49 +160,32 @@ public class BrowserActivity extends BaseActivity  {
                     VipHelperUtils.getInstance().setCurrentPlayUrl(s);
                     BrowserActivity.this.startActivity(intent);
                     return;
-                }
-                if(VipHelperUtils.getInstance().getCurrentPosition() == 5) {
-                }else {
-                    webView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-//                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(BrowserActivity.this));
+                }*/
+                webView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isLiveType) {
+//                            LiveModel.getInstance().handlePingBiAd(webView);
+                        }else {
+
+                            VipHelperUtils.getInstance().changeThirdVideoPlayBg(webView);
+                            VipHelperUtils.getInstance().pingBiAd(webView);
                         }
-                    }, 3000L);
-                }
+                    }
+                }, 500);
             }
 
             @Override
             public void onPageFinished(final WebView webView, String s) {
                 Log.i("onPageFinished", s);
                 super.onPageFinished(webView, s);
-//				Toast.makeText(getApplicationContext(), "页面加载完成", Toast.LENGTH_SHORT).show();
-                if(VipHelperUtils.getInstance().getCurrentPosition() == 4) {
-                    webView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-//                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(BrowserActivity.this));
-                        }
-                    }, 5000L);
-                    return;
-                }
-
-                if(VipHelperUtils.getInstance().getCurrentPosition() == 5 ) {
-                    webView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-//                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(BrowserActivity.this));
-                        }
-                    }, 3000L);
+                if(isLiveType) {
+                    LiveModel.getInstance().handlePingBiAd(webView);
                 }else {
-//                    webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(BrowserActivity.this));
+
+                    VipHelperUtils.getInstance().changeThirdVideoPlayBg(webView);
+                    VipHelperUtils.getInstance().pingBiAd(webView);
                 }
-//                webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon());
-                // mTestHandler.sendEmptyMessage(MSG_OPEN_TEST_URL);
-                mTestHandler.sendEmptyMessageDelayed(MSG_OPEN_TEST_URL, 5000);// 5s?
-                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
-                    changGoForwardButton(webView);
-                /* mWebView.showLog("test Log"); */
             }
         });
 
@@ -247,7 +210,11 @@ public class BrowserActivity extends BaseActivity  {
             @Override
             public void onShowCustomView(View view,
                                          CustomViewCallback customViewCallback) {
-                FrameLayout normalView = (FrameLayout) findViewById(R.id.web_filechooser);
+//                BarUtils.setStatusBarVis;
+                mNavGation.setVisibility(View.GONE);
+                BarUtils.setStatusBarVisibility(BrowserActivity.this, false);
+                ScreenUtils.setLandscape(BrowserActivity.this);
+                FrameLayout normalView = (FrameLayout) mViewParent;
                 ViewGroup viewGroup = (ViewGroup) normalView.getParent();
                 viewGroup.removeView(normalView);
                 viewGroup.addView(view);
@@ -263,6 +230,9 @@ public class BrowserActivity extends BaseActivity  {
                     callback = null;
                 }
                 if (myVideoView != null) {
+                    BarUtils.setStatusBarVisibility(BrowserActivity.this, true);
+                    mNavGation.setVisibility(View.VISIBLE);
+                    ScreenUtils.setPortrait(BrowserActivity.this);
                     ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
                     viewGroup.removeView(myVideoView);
                     viewGroup.addView(myNormalView);
@@ -309,7 +279,7 @@ public class BrowserActivity extends BaseActivity  {
                                         Toast.makeText(
                                                 BrowserActivity.this,
                                                 "准备下载...",
-                                                1000).show();
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 })
                         .setNegativeButton("否",
@@ -363,19 +333,26 @@ public class BrowserActivity extends BaseActivity  {
                 .getPath());
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        if (mIntentUrl == null) {
-            //默认移动UA
-            webSetting.setUserAgentString("User-Agent: MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+        if(isLiveType) {
+            if(LiveModel.getInstance().isPCUAbyCurPosition()) {
+                webSetting.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+            }else {
+//                webSetting.setUserAgentString("Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
+                webSetting.setUserAgentString("Mozilla/5.0 (Linux; Android 4.4.4; OPPO R7 Build/KTU84P) AppleWebKit/537.36 (KHTML,like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile ");
+            }
+        }else {
+            webSetting.setUserAgentString("User-Agent: MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 5.0; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+            //优酷，土豆，芒果PC_UA
+/*            switch (VipHelperUtils.getInstance().getCurrentPosition()) {
+                case 3:
+                case 4:
+                case 5:
+                    Log.i("切换UA", "优酷，土豆，芒果PC版面--------------" );
+                    webSetting.setUserAgentString("User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)");
+                    break;
+            }*/
         }
-        //优酷，土豆，芒果PC_UA
-        switch (VipHelperUtils.getInstance().getCurrentPosition()) {
-            case 3:
-            case 4:
-            case 5:
-                Log.i("切换UA", "优酷，土豆，芒果PC版面--------------" );
-                webSetting.setUserAgentString("User-Agent, Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)");
-                break;
-        }
+        enableX5FullscreenFunc();
         // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
         // webSetting.setPreFectch(true);
         long time = System.currentTimeMillis();
@@ -392,23 +369,28 @@ public class BrowserActivity extends BaseActivity  {
     }
 
     private void initBtnListenser() {
-        mBack = (ImageButton) findViewById(R.id.btnBack1);
-        mForward = (ImageButton) findViewById(R.id.btnForward1);
-        mExit = (ImageButton) findViewById(R.id.btnExit1);
-        mHome = (ImageButton) findViewById(R.id.btnHome1);
-//        mGo = (Button) findViewById(R.id.btnGo1);
-//        mUrl = (EditText) findViewById(R.id.editUrl1);
-        mMore = (ImageButton) findViewById(R.id.btnMore);
         mPlayerBtn = (ImageView) findViewById(R.id.iv_vip_player);
         mRlGuide = (RelativeLayout) findViewById(R.id.rl_guide);
         mTvKnow = (TextView) findViewById(R.id.tv_know);
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16) {
+        mPlay = (TextView) findViewById(R.id.tv_play);
+        mClose = (TextView) findViewById(R.id.tv_close);
+        mNavGation = findViewById(R.id.navigation1);
+/*        if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16) {
             mBack.setAlpha(disable);
             mForward.setAlpha(disable);
             mHome.setAlpha(disable);
         }
-        mHome.setEnabled(false);
-
+        mHome.setEnabled(false);*/
+        mClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        if(isLiveType) {
+            mPlay.setVisibility(View.GONE);
+            mPlayerBtn.setVisibility(View.GONE);
+        }
 
         if (mIntentUrl != null) {
             mPlayerBtn.setVisibility(View.GONE);
@@ -442,7 +424,7 @@ public class BrowserActivity extends BaseActivity  {
                         String url = mWebView.getUrl();
                         String url1 = mWebView.getOriginalUrl();
                         Log.i("获取Url", "获取Url--------------" + url + "原始url--------" + url1);
-                        //腾讯UA特殊处理（移动版面，PC接口）
+/*                        //腾讯UA特殊处理（移动版面，PC接口）
                         if(VipHelperUtils.getInstance().getCurrentPosition() == 1) {
 
                             Log.i("切换UA", "腾讯UA--------------" + url);
@@ -452,7 +434,7 @@ public class BrowserActivity extends BaseActivity  {
                             mobileUrl = url;
                             mWebView.loadUrl(url);
                             return;
-                        }
+                        }*/
 
                         Intent intent = new Intent(BrowserActivity.this, PlayActivity.class);
                         intent.putExtra("URL", url);
@@ -464,125 +446,26 @@ public class BrowserActivity extends BaseActivity  {
                 });
             }
         });
-        mBack.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (mWebView != null && mWebView.canGoBack())
-                    mWebView.goBack();
-            }
-        });
+    }
 
-        mForward.setOnClickListener(new OnClickListener() {
+    // /////////////////////////////////////////
+    // 向webview发出信息
+    private void enableX5FullscreenFunc() {
 
-            @Override
-            public void onClick(View v) {
-                if (mWebView != null && mWebView.canGoForward())
-                    mWebView.goForward();
-            }
-        });
+        if (mWebView.getX5WebViewExtension() != null) {
+//            Toast.makeText(this, "开启X5全屏播放模式", Toast.LENGTH_LONG).show();
+            Bundle data = new Bundle();
 
-      /*  mGo.setOnClickListener(new OnClickListener() {
+            data.putBoolean("standardFullScreen", false);// true表示标准全屏，false表示X5全屏；不设置默认false，
 
-            @Override
-            public void onClick(View v) {
-                String url = mUrl.getText().toString();
-                mWebView.loadUrl(url);
-                mWebView.requestFocus();
-            }
-        });*/
+            data.putBoolean("supportLiteWnd", false);// false：关闭小窗；true：开启小窗；不设置默认true，
 
-        mMore.setOnClickListener(new OnClickListener() {
+            data.putInt("DefaultVideoScreen", 1);// 1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
 
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BrowserActivity.this, "not completed",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
-        /*mUrl.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mGo.setVisibility(View.VISIBLE);
-                    if (null == mWebView.getUrl())
-                        return;
-                    if (mWebView.getUrl().equalsIgnoreCase(mHomeUrl)) {
-                        mUrl.setText("");
-                        mGo.setText("首页");
-                        mGo.setTextColor(0X6F0F0F0F);
-                    } else {
-                        mUrl.setText(mWebView.getUrl());
-                        mGo.setText("进入");
-                        mGo.setTextColor(0X6F0000CD);
-                    }
-                } else {
-                    mGo.setVisibility(View.GONE);
-                    String title = mWebView.getTitle();
-                    if (title != null && title.length() > MAX_LENGTH)
-                        mUrl.setText(title.subSequence(0, MAX_LENGTH) + "...");
-                    else
-                        mUrl.setText(title);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-
-        });*/
-
-       /* mUrl.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-
-                String url = null;
-                if (mUrl.getText() != null) {
-                    url = mUrl.getText().toString();
-                }
-
-                if (url == null
-                        || mUrl.getText().toString().equalsIgnoreCase("")) {
-                    mGo.setText("请输入网址");
-                    mGo.setTextColor(0X6F0F0F0F);
-                } else {
-                    mGo.setText("进入");
-                    mGo.setTextColor(0X6F0000CD);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
-                // TODO Auto-generated method stub
-
-            }
-        });*/
-
-        mHome.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mWebView != null)
-                    mWebView.loadUrl(mHomeUrl);
-            }
-        });
-
-        mExit.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Process.killProcess(Process.myPid());
-            }
-        });
+            mWebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams",
+                    data);
+        }
     }
 
     boolean[] m_selected = new boolean[]{true, true, true, true, false,
@@ -594,8 +477,6 @@ public class BrowserActivity extends BaseActivity  {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mWebView != null && mWebView.canGoBack()) {
                 mWebView.goBack();
-                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
-                    changGoForwardButton(mWebView);
                 return true;
             } else
                 return super.onKeyDown(keyCode, event);
@@ -684,7 +565,7 @@ public class BrowserActivity extends BaseActivity  {
                 @Override
                 public void run() {
 
-                    //腾讯UA特殊处理（移动版面，PC接口）
+/*                    //腾讯UA特殊处理（移动版面，PC接口）
                     if(VipHelperUtils.getInstance().getCurrentPosition() == 1) {
 
                         Log.i("切换UA", "腾讯UA--------------" + url);
@@ -694,7 +575,7 @@ public class BrowserActivity extends BaseActivity  {
                         mobileUrl = url;
                         mWebView.loadUrl(url);
                         return;
-                    }
+                    }*/
 
                     Intent intent = new Intent(BrowserActivity.this, PlayActivity.class);
                     intent.putExtra("URL", url);

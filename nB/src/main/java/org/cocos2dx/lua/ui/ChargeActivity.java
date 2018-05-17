@@ -6,21 +6,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.maisi.video.obj.video.CalcuPayEntity;
 import com.maisi.video.obj.video.ChargeInfoEntity;
-import com.maisi.video.obj.video.ChargeRequestEntity;
 import com.zuiai.nn.R;
 
 import org.cocos2dx.lua.APPAplication;
 import org.cocos2dx.lua.BoyiRxUtils;
+import org.cocos2dx.lua.ToastUtil;
 import org.cocos2dx.lua.VipHelperUtils;
 import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.service.Service;
@@ -42,16 +46,22 @@ import okhttp3.RequestBody;
 public class ChargeActivity extends BaseActivity {
 
     @BindView(R.id.iv_charge)
-    TextView mIvCharge;
+    ImageView mIvCharge;
     @BindView(R.id.gv_list)
     NoScrollGridView mGvList;
     @BindView(R.id.et_recommend_num)
     EditText mEtRecommendNum;
     @BindView(R.id.iv_real_charge)
     TextView mIvRealCharge;
+    @BindView(R.id.rb)
+    RadioGroup rb;
+    @BindView(R.id.rb_zhifubao)
+    RadioButton rbZhifubao;
+    @BindView(R.id.rb_wechat)
+    RadioButton rbWechat;
 
-    private int currentIndex;
-    private double currentPay;
+    private int currentSelType = 1;
+    private double currentPay = 99;
     private LinearLayout[] linearLayouts;
     private ArrayList<ChargeInfoEntity> list = new ArrayList<>();
     private ListAdapter listAdapter;
@@ -66,11 +76,72 @@ public class ChargeActivity extends BaseActivity {
         setContentView(R.layout.activity_charge);
         ButterKnife.bind(this);
 
+/*
         listAdapter = new ListAdapter(this, list);
         mGvList.setAdapter(listAdapter);
+*/
 
-        if (VipHelperUtils.getInstance().isWechatLogin() && VipHelperUtils.getInstance().getVipUserInfo().getIfFirst() == 1) {
+        rb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId){
+                    case R.id.rb_zhifubao:
+                        currentSelType = 1;
+                        break;
+                    case R.id.rb_wechat:
+                        currentSelType = 2;
+                        break;
+                }
+            }
+        });
+
+        if (VipHelperUtils.getInstance().isWechatLogin()
+                && VipHelperUtils.getInstance().getVipUserInfo().getIfFirst() == 1
+                ) {
             mEtRecommendNum.setEnabled(true);
+        }
+
+        if(VipHelperUtils.getInstance().isValidVip()) {
+
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("尊敬的VIP用户：")
+                    .content("您已经是尊贵的VIP用户了~~")
+                    .positiveText("")
+                    .negativeText("确定")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+
+                        }
+                    })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }else {
+
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("尊敬的用户：")
+                    .content("您即将成为会员，不仅有机会可以免费观看12大视频网站的全部VIP视频，动动手指推广，可以月入几十万。")
+                    .positiveText("")
+                    .negativeText("成为会员")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+
+                        }
+                    })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
         }
 
         //获取充值金额
@@ -80,12 +151,9 @@ public class ChargeActivity extends BaseActivity {
 
                     @Override
                     public void onNext(ArrayList<ChargeInfoEntity> result) {
-                        list.clear();
-                        list.addAll(result);
-                        list.get(0).setSelected(true);
-                        listAdapter.notifyDataSetChanged();
-
-                        CalcuPayEntity entity = new CalcuPayEntity();
+                        currentPay = Double.parseDouble(result.get(0).getValue1());
+                        ToastUtil.show(ChargeActivity.this, "当前支付金额为:" + currentPay, Toast.LENGTH_SHORT);
+/*                        CalcuPayEntity entity = new CalcuPayEntity();
                         entity.setAmount(Double.parseDouble(list.get(0).getValue1()));
                         entity.setPoints(VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft());
                         Gson gson = new Gson();
@@ -100,23 +168,34 @@ public class ChargeActivity extends BaseActivity {
                                         mIvRealCharge.setText("积分抵现后仅需支付：" + result + "元");
                                         currentPay = Double.parseDouble(result);
                                     }
-                                });
+                                });*/
                     }
                 });
-
-
     }
 
     @OnClick(R.id.iv_charge)
     public void onClick() {
-
-        if(currentPay != 0 ) {
-
-            UserModel.getInstance().requestCharge(this, currentPay, VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft(), mEtRecommendNum.getText().toString());
-        }else {
+        if(VipHelperUtils.getInstance().isValidVip()) {
             Toast.makeText(
                     APPAplication.instance,
-                   "请稍候再试。。。。。。。",
+                    "您已经是VIP了，无需重复支付~~",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (currentPay != 0) {
+            switch (currentSelType){
+                case 1:
+                    UserModel.getInstance().requestCharge(this, currentPay, VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft(), mEtRecommendNum.getText().toString());
+                    break;
+                case 2:
+                    UserModel.getInstance().requestWeixinCharge(this, currentPay, VipHelperUtils.getInstance().getVipUserInfo().getPointsLeft(), mEtRecommendNum.getText().toString());
+                    break;
+            }
+
+        } else {
+            Toast.makeText(
+                    APPAplication.instance,
+                    "请稍候再试。。。。。。。",
                     Toast.LENGTH_SHORT).show();
         }
 

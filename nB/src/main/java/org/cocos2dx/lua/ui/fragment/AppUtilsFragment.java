@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.AppUtils;
-import com.bumptech.glide.Glide;
 import com.maisi.video.obj.video.AppInfo;
 import com.maisi.video.obj.video.BannerEntity;
 import com.maisi.video.obj.video.NotifyEntity;
@@ -36,15 +34,11 @@ import org.cocos2dx.lua.EventBusTag;
 import org.cocos2dx.lua.VipHelperUtils;
 import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.service.Service;
-import org.cocos2dx.lua.service.UrlConnect;
 import org.cocos2dx.lua.ui.AppListActivity;
 import org.cocos2dx.lua.ui.BrowserActivity;
 import org.cocos2dx.lua.ui.ChargeActivity;
-import org.cocos2dx.lua.ui.DaiLiActivity;
-import org.cocos2dx.lua.ui.MainActivity;
-import org.cocos2dx.lua.ui.SplashActivity;
+import org.cocos2dx.lua.ui.BindZhiFuActivity;
 import org.cocos2dx.lua.ui.widget.BannerPageAdapter;
-import org.cocos2dx.lua.ui.widget.NoScrollGridView;
 import org.cocos2dx.lua.ui.widget.SortableNinePhotoLayout;
 import org.cocos2dx.lua.ui.widget.holder.CBViewHolderCreator;
 import org.cocos2dx.lua.ui.widget.holder.Holder;
@@ -169,7 +163,7 @@ public class AppUtilsFragment extends BaseFragment implements SortableNinePhotoL
                 startActivity(intent2);
                 break;
             case R.id.ll_member_center:
-                Intent intent3 = new Intent(getActivity(), DaiLiActivity.class);
+                Intent intent3 = new Intent(getActivity(), BindZhiFuActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.ll_share:

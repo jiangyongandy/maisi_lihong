@@ -1,9 +1,11 @@
 package org.cocos2dx.lua.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.simple.eventbus.EventBus;
@@ -21,6 +23,7 @@ public class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         if (useEventBus())
             EventBus.getDefault().register(this);
+        LogUtils.i("-----------"+this.getClass().getName());
     }
 
     @Override
@@ -52,5 +55,11 @@ public class BaseActivity extends FragmentActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+    public void jumpActivity(Class _activity) {
+        Intent intent = new Intent(this, _activity);
+        startActivity(intent);
+    }
+
 
 }

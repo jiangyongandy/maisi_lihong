@@ -52,7 +52,6 @@ import org.cocos2dx.lua.VipHelperUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.cocos2dx.lua.APPAplication.api;
 
 
 public class HomeActivity extends BaseActivity {
@@ -197,7 +196,7 @@ public class HomeActivity extends BaseActivity {
                     webView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(HomeActivity.this));
+                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(webView));
                         }
                     }, 3000L);
                 }
@@ -213,11 +212,11 @@ public class HomeActivity extends BaseActivity {
                     webView.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(HomeActivity.this));
+                            webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(webView));
                         }
                     }, 3000L);
                 } else {
-                    webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(HomeActivity.this));
+                    webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon(webView));
                 }
 //                webView.loadUrl(VipHelperUtils.getInstance().changePlayURLbyPositon());
                 // mTestHandler.sendEmptyMessage(MSG_OPEN_TEST_URL);
@@ -661,48 +660,6 @@ public class HomeActivity extends BaseActivity {
 
             } else {
 
-                new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle("需要登陆微信")
-                        .setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // send oauth request
-                                        final SendAuth.Req req = new SendAuth.Req();
-                                        req.scope = "snsapi_userinfo";
-                                        req.state = "none";
-                                        boolean sendReq = api.sendReq(req);
-                                        if (sendReq) {
-                                            Log.v(TAG, "sendReq  sendReq ---------------true");
-                                        }
-                                    }
-                                })
-                        .setNegativeButton("否",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                HomeActivity.this,
-                                                "拒绝登录无法观看...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                HomeActivity.this,
-                                                "取消...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }).show();
 
             }
         }

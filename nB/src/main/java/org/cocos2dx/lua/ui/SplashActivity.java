@@ -14,9 +14,8 @@ import android.view.WindowManager;
 
 import com.zuiai.nn.R;
 
-import org.cocos2dx.lua.CommonConstant;
+import org.cocos2dx.lua.APPAplication;
 import org.cocos2dx.lua.ui.fragment.GuideFragment;
-import org.cocos2dx.lua.ui.fragment.GuideFragment2;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -31,7 +30,24 @@ import java.util.TimerTask;
 public class SplashActivity extends BaseActivity {
 
     private int count;
-    private Timer timer;
+    private Timer timer = new Timer();
+    private boolean isFirstRun;
+    private Handler handler = new Handler();
+    private int delay = 1000;
+    private TimerTask timerTask = new TimerTask() {
+
+        @Override
+        public void run() {
+            jumpActivity(MainActivity.class);
+        }
+    };
+    private APPAplication.QbInitListener listener = new APPAplication.QbInitListener() {
+        @Override
+        public void onQbInit() {
+            if (APPAplication.instance.qbsdkIsInit)
+                timer.schedule(timerTask, delay);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +56,20 @@ public class SplashActivity extends BaseActivity {
         //全屏效果
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         initData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        APPAplication.instance.qbInitListenerArrayList.add(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (listener != null) {
+//            APPAplication.instance.qbInitListenerArrayList.remove(listener);
+        }
     }
 
     private void initData() {
@@ -52,43 +82,18 @@ public class SplashActivity extends BaseActivity {
         vpGuide.setAdapter(new InnerPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"1"}));
         final Handler handler = new Handler();
         final ViewPager finalVpGuide = vpGuide;
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = null;
+/*        if (APPAplication.instance.qbsdkIsInit) {
+            timer.schedule(timerTask, delay);
+        }else {
+            Toast.makeText(this, "vip服务器加载中.....", Toast.LENGTH_LONG).show();
+        }*/
+        timer.schedule(timerTask, delay);
+    }
 
-                intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
-       /* final TimerTask timerTask = new TimerTask() {
-
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        count++;
-                        finalVpGuide.setCurrentItem(count);
-                        if (count == 2) {
-                            timer.cancel();
-                            Intent intent = null;
-                            if (!CommonConstant.isRelease) {
-                                intent = new Intent(SplashActivity.this, AppUtilsActivity.class);
-                            } else {
-
-                                intent = new Intent(SplashActivity.this, MainActivity.class);
-                            }
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                });
-            }
-        };
-        timer = new Timer();
-        timer.schedule(timerTask, 1500, 1500);*/
+    public void jumpActivity(Class _activity) {
+        Intent intent = new Intent(SplashActivity.this, _activity);
+        startActivity(intent);
+        finish();
     }
 
     class InnerPagerAdapter extends FragmentPagerAdapter {

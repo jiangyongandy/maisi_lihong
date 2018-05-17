@@ -142,7 +142,7 @@ public class WXAPIConst {
 	//接口未授权
 	public final int apiunauthorized =50001;
 
-	public static final String APP_ID = "wx058ff9dbb47058a0";
-	public static final String AppSecret = "92580ff3bf379dbfae5a3c676914c4b1";
-	public static final String AppPay_ID = "1486633122";
+	public static final String APP_ID = "wx89b88892ebddf590";
+	public static final String AppSecret = "46db7877b95c1f98f0bc1ce1b108bcdb";
+	public static final String AppPay_ID = "1503378551";
 }

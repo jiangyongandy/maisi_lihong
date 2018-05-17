@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Insert title here</title>
+    <style>
+body{
+		margin:0px;
+		padding:0px;
+		text-align:center;
+	}
+div{
+		margin:0px;
+		padding:0px;
+		margin:auto;
+	}
+
+
+    </style>
+</head>
+<body background="fxy.png">
+<div><input type="text" value="ssssss" readonly="readonly" id="commendno"
+            style="
+      font-size: 48px;
+    width: 358px;
+    margin-left: 55px;
+    margin-right: -37px;
+    border: 0px;
+    margin-top: 1000px;
+    text-align: center;"/></div>
+
+<div><img src="D_06.png" style="margin-left: 97px" id="copy"/></div>
+<div><img src="D_09.png" style="margin-left: 86px"/></div>
+
+<div><img src="D_13.png" style="margin-right: 413px;
+    margin-top: 441px;" id="share1"/></div>
+<div><img src="D_14.png" style="margin-left: 88px;
+    margin-top: -253px;" id="share2"/></div>
+<div><img src="D_15.png" style="margin-right: -583px;
+    margin-top: -253px;" id="share3"/></div>
+
+<div><img src="D_18.png" style="margin-right: 405px;
+    margin-top: -4px;" id="share4"/></div>
+<div><img src="D_19.png" style="margin-right: -89px;
+    margin-top: -249px;"/></div>
+<div><img src="D_20.png" style="margin-right: -586px;
+    margin-top: -249px;"/></div>
+
+<script type="text/javascript">
+    document.getElementById('share1').onclick = function(){
+        jsHook.go2Share(1);
+    };
+    document.getElementById('share2').onclick = function(){
+        jsHook.go2Share(2);
+    };
+    document.getElementById('share3').onclick = function(){
+        jsHook.go2Share(3);
+    };
+    document.getElementById('share4').onclick = function(){
+        jsHook.go2Share(4);
+    };
+    document.getElementById('copy').onclick = function(){
+        jsHook.copyCommendNo();
+    };
+    var commendNo = jsHook.getCommendNo();
+    document.getElementById('commendno').value = commendNo;
+
+</script>
+
+</body>
+</html>

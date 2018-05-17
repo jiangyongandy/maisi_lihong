@@ -9,7 +9,7 @@
         android:background="#ffffff"
         android:orientation="vertical">
 
-        <android.support.v4.view.ViewPager
+        <org.cocos2dx.lua.ui.widget.NoScrollViewPage
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -28,24 +28,40 @@
                 style="@style/tabbar"
                 android:checked="true"
                 android:drawableTop="@drawable/sel_home_video"
-                android:text="首页"
+                android:text="魔视"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rb_live"
+                style="@style/tabbar"
+                android:checked="true"
+                android:drawableTop="@drawable/sel_live_btn"
+                android:text="直播"
                 android:textColor="#000000"
                 android:textSize="12sp" />
 
             <ImageView
+                android:id="@+id/rl_about"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_vip_play" />
 
             <RadioButton
+                android:id="@+id/rb_find"
+                style="@style/tabbar"
+                android:drawableTop="@drawable/sel_video_btn"
+                android:text="视频"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+            <RadioButton
                 android:id="@+id/rb_person"
                 style="@style/tabbar"
                 android:drawableTop="@drawable/sel_person_video"
-                android:text="个人中心"
+                android:text="我的"
                 android:textColor="#000000"
                 android:textSize="12sp" />
-
 
         </RadioGroup>
 

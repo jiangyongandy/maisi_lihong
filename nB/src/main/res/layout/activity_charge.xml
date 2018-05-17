@@ -9,17 +9,16 @@
         android:id="@+id/navigation1"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:background="#ffffff"
+        android:background="@color/theme"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
         <TextView
+            style="@style/title_bar_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="充值激活VIP"
-            style="@style/title_bar_text"
-            />
+            android:text="成为会员" />
 
         <View
             android:layout_width="match_parent"
@@ -27,32 +26,76 @@
             android:layout_alignParentBottom="true"
             android:background="#dddddd" />
 
-        <RelativeLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:onClick="onBackView"
-            >
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_info_arrow_back" />
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:background="@color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+
+                <ImageView
+                    android:id="@+id/iv_recommend_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_recommend_txt" />
+
+                <ImageView
+                    android:layout_toRightOf="@id/iv_recommend_name"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_recommend_head" />
+
+
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,7 +105,8 @@
                 android:text="充值金额："
                 android:textColor="#000000"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <org.cocos2dx.lua.ui.widget.NoScrollGridView
                 android:id="@+id/gv_list"
@@ -73,34 +117,37 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="20dp"
                 android:horizontalSpacing="10dp"
-                android:numColumns="2"
+                android:numColumns="1"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="5dp" />
+                android:verticalSpacing="5dp"
+                android:visibility="gone"
+                />
 
-<!--            <LinearLayout
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                >
 
                 <LinearLayout
-                    android:id="@+id/ll_charge_catalog1"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:id="@+id/ll_charge_catalog"
+                    android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/selector_price_tab"
+                    android:background="@drawable/ic_price"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    >
 
                     <TextView
+                        android:id="@+id/tv_current_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="月卡VIP15元"
                         android:textColor="#000000"
-                        android:textSize="22sp"
-                         />
+                        android:textSize="22sp" />
 
                     <TextView
                         android:id="@+id/tv_source_price"
@@ -110,173 +157,220 @@
                         android:layout_marginTop="5dp"
                         android:text="原价18.8元"
                         android:textColor="#ef2a2b"
-                        android:textSize="16sp"
-                         />
+                        android:textSize="16sp" />
 
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_charge_catalog2"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:background="@drawable/selector_price_tab"
-                    >
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/ic_price"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="季卡VIP40元"
-                        android:textColor="#000000"
-                        android:textSize="22sp"
-                        />
-
-                    <TextView
-                        android:id="@+id/tv_source_price2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:text="原价56元"
-                        android:textColor="#ef2a2b"
-                        android:textSize="16sp"
-                        />
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
+                android:layout_height="48dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
-                <LinearLayout
-                    android:id="@+id/ll_charge_catalog3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/selector_price_tab"
-                    android:gravity="center"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_pay_2"
+                    android:visibility="gone"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_pay_type"
+                    android:layout_width="60dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_pay_type" />
+
+                <RadioGroup
+                    android:layout_toRightOf="@id/iv_pay_type"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="半年VIP72元"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:clickable="false"
+                        android:text="在线支付"
                         android:textColor="#000000"
-                        android:textSize="22sp"
-                         />
+                        android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/tv_source_price3"
-                        android:layout_width="wrap_content"
+                    <RadioButton
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:text="原价112元"
-                        android:textColor="#ef2a2b"
-                        android:textSize="16sp"
-                         />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_charge_catalog4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/selector_price_tab"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="年卡VIP126元"
+                        android:text="找人支付"
+                        android:clickable="false"
                         android:textColor="#000000"
-                        android:textSize="22sp"
-                         />
+                        android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/tv_source_price4"
-                        android:layout_width="wrap_content"
+                </RadioGroup>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_pay_2"
+                    android:visibility="gone"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_zhifu_way"
+                    android:layout_width="60dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_pay_way" />
+
+                <RadioGroup
+                    android:id="@+id/rb"
+                    android:layout_toRightOf="@id/iv_zhifu_way"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_zhifubao"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp"
-                        android:text="原价225元"
-                        android:textColor="#ef2a2b"
-                        android:textSize="16sp"
-                         />
+                        android:checked="true"
+                        android:text="支付宝支付"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_wechat"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="微信支付"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+
+                </RadioGroup>
 
 
-                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
 
-            </LinearLayout>-->
+                <ImageView
+                    android:id="@+id/iv_commend_deco"
+                    android:layout_width="60dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/iv_commend_code" />
+
+                <EditText
+                    android:id="@+id/et_recommend_num"
+                    android:layout_toRightOf="@id/iv_commend_deco"
+                    android:layout_width="200dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:enabled="false"
+                    android:hint="请输入推荐码"
+                    android:inputType="text"
+                    android:maxLength="18"
+                    android:singleLine="true"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
+                    android:textSize="16sp" />
+
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/iv_real_charge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:padding="4dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/white"
                 android:gravity="center"
-                android:text="积分抵现后仅需支付："
-                android:textColor="#313131"
-                android:textSize="14sp"
-                />
+                android:text="备注：请联系推荐人，填写准确推荐码"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/iv_charge"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="48dp"
-                android:layout_marginRight="20dp"
+                android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="充值VIP"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:background="@drawable/btn_charge_bg_selected"
-                />
+                android:background="@drawable/iv_btn_pay"
+                android:scaleType="fitCenter" />
 
-            <EditText
-                android:id="@+id/et_recommend_num"
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_margin="20dp"
-                android:paddingBottom="25dp"
-                android:drawablePadding="15dp"
-                android:hint="推荐码(只有首充用户可以使用哦~~)："
-                android:inputType="text"
-                android:maxLength="18"
-                android:singleLine="true"
-                android:textSize="14sp"
-                android:textColorHint="#999999"
-                android:textColor="#333333"
-                android:enabled="false"
-                />
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:src="@drawable/iv_pay_deco_1"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:scaleType="fitCenter" />
 
 
         </LinearLayout>
-    </ScrollView>
 
+    </ScrollView>
 
 </LinearLayout>

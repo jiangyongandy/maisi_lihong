@@ -5,7 +5,10 @@ import com.maisi.video.obj.video.ChargeInfoEntity;
 import com.maisi.video.obj.video.MsbRateEntity;
 import com.maisi.video.obj.video.NotifyEntity;
 import com.maisi.video.obj.video.PlayLineEntity;
+import com.maisi.video.obj.video.QuestionEntity;
 import com.maisi.video.obj.video.RecommendEntity;
+import com.maisi.video.obj.video.SystemMessageEntity;
+import com.maisi.video.obj.video.TestEntity;
 import com.maisi.video.obj.video.UpdateEntity;
 import com.maisi.video.obj.video.UserInfoEntity;
 import com.maisi.video.obj.video.WechatTipsEntity;
@@ -110,8 +113,61 @@ public interface CommonApi {
     @POST("alipay/alitransfer")
     Observable<String > alitransfer(@Body RequestBody body);
 
+    //绑定支付宝接口/修改支付宝信息接口/App/business/addOrUpZfb/{uid}/{zfbno}/{zfbname}
+    @GET("business/addOrUpZfb/{uid}/{zfbno}/{zfbname}")
+    Observable<UserInfoEntity > bindZhiFu(@Path("uid") String no, @Path("zfbno") String pw,@Path("zfbname") String id);
+
     //--卡密激活VIP http://39.108.151.95:8000/App/web/useCard/{cardPw}/{uid}
-    @GET("web/useCard/{cardPw}/{uid}")
-    Observable<String > activeVip(@Path("cardPw") String pw, @Path("uid") String id);
+    @GET("web/useCard/{cardNo}/{cardPw}/{uid}")
+    Observable<String > activeVip(@Path("cardNo") String no, @Path("cardPw") String pw,@Path("uid") String id);
+
+    //--百科 http://39.108.151.95:8000/App/user/getDicByGroup/114
+    @GET("user/getDicByGroup/114")
+    Observable<ArrayList<QuestionEntity>>getQuestion();
+
+    //三级代理
+    //19、收益明细 /App/business/queryIncomeDetail/{uid}
+    @GET("business/queryIncomeDetail/{uid}")
+    Observable<ArrayList<String>>queryIncomeDetail(@Path("uid") String no);
+
+    //22、提现记录App/business/queryCommend2CashRecord/{uid}
+    @GET("business/queryCommend2CashRecord/{uid}")
+    Observable<ArrayList<String[]>>queryCommend2CashRecord(@Path("uid") String no);
+
+    //21、查询我的团队App/business/queryTeamWithUid/{uid}
+    @GET("business/queryTeamWithUid/{uid}")
+    Observable<ArrayList<String[]>>queryTeamWithUid(@Path("uid") String no);
+
+    //18、按月查询个人直推人数/App/business/queryCommenNumWithUid/{uid}
+    @GET("business/queryCommenNumWithUid/{uid}")
+    Observable<ArrayList<String>>queryCommenNumWithUid(@Path("uid") String no);
+
+    //团队搜索接口/App/business/queryWithName/{zfbname}/{uid}
+    @GET("business/queryWithName/{zfbname}/{uid}")
+    Observable<ArrayList<String[]>>queryWithName(@Path("zfbname") String zfbname, @Path("uid") String uid);
+
+    //17、团队排名/App/business/teamList/0,1,2
+    @GET("business/teamList/0,1,2")
+    Observable<ArrayList<String[]>>queryTeamList();
+
+    //16、总收益排名App/business/incomeList
+    @GET("business/incomeList")
+    Observable<ArrayList<String[]>>queryIncomeList();
+
+    //消息
+    //系统消息接口 39.108.151.95:8000/App/user/getDicByGroup/136
+    @GET("user/getDicByGroup/136")
+    Observable<ArrayList<SystemMessageEntity>>querySystemMessage();
+
+    //消息
+    //微信生成订单 http://39.108.151.95:8000/App//wxpay/payOrder
+    @POST("wxpay/payOrder")
+    Observable<String>payOrder(@Body RequestBody body);
+
+    //消息
+    //微信生成订单 http://wxpay.wxutil.com/pub_v2/app/app_pay.php
+    @GET("http://wxpay.wxutil.com/pub_v2/app/app_pay.php")
+    Observable<TestEntity > wePayTest();
+
 
 }

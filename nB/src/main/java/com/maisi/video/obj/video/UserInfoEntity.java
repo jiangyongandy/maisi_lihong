@@ -25,6 +25,7 @@ public class UserInfoEntity implements Serializable {
      */
 
 
+
     private String uid;
     private double vipLeft;
     private double pointsLeft;
@@ -34,11 +35,37 @@ public class UserInfoEntity implements Serializable {
     private long createdTime;
     private Object lastupdatedTime;
     private int enable;
-    private Object commendNo;
+    private String commendNo;
     private int ifFirst;
 
 
     private WeiChatUserInfo weiChatUserInfo;
+    /**
+     * vipLeft : 0
+     * pointsLeft : 0
+     * commendLeft : 0
+     * lastupdatedTime : null
+     * commendNo : 151189
+     * give_status : 1
+     * zfbname : null
+     * zfbno : null
+     * commend_level : 0
+     * incomeAll : null
+     * zhituiIncome : null
+     * fenxiaoIncome : null
+     * monthIncome : null
+     * giveAmount : 0
+     * commend2cash : 0
+     */
+
+    private int give_status;
+    private String zfbname;
+    private String zfbno;
+    private int commend_level;
+    private double incomeAll;
+    private double zhituiIncome;
+    private double fenxiaoIncome;
+    private double monthIncome;
 
     public String getUid() {
         return uid;
@@ -96,11 +123,11 @@ public class UserInfoEntity implements Serializable {
         this.enable = enable;
     }
 
-    public Object getCommendNo() {
+    public String getCommendNo() {
         return commendNo;
     }
 
-    public void setCommendNo(Object commendNo) {
+    public void setCommendNo(String commendNo) {
         this.commendNo = commendNo;
     }
 
@@ -134,5 +161,69 @@ public class UserInfoEntity implements Serializable {
 
     public void setCommend2cash(double commend2cash) {
         this.commend2cash = commend2cash;
+    }
+
+    public int getGive_status() {
+        return give_status;
+    }
+
+    public void setGive_status(int give_status) {
+        this.give_status = give_status;
+    }
+
+    public String getZfbname() {
+        return zfbname;
+    }
+
+    public void setZfbname(String zfbname) {
+        this.zfbname = zfbname;
+    }
+
+    public String getZfbno() {
+        return zfbno;
+    }
+
+    public void setZfbno(String zfbno) {
+        this.zfbno = zfbno;
+    }
+
+    public int getCommend_level() {
+        return commend_level;
+    }
+
+    public void setCommend_level(int commend_level) {
+        this.commend_level = commend_level;
+    }
+
+    public Object getIncomeAll() {
+        return incomeAll;
+    }
+
+    public void setIncomeAll(double incomeAll) {
+        this.incomeAll = incomeAll;
+    }
+
+    public Object getZhituiIncome() {
+        return zhituiIncome;
+    }
+
+    public void setZhituiIncome(double zhituiIncome) {
+        this.zhituiIncome = zhituiIncome;
+    }
+
+    public Object getFenxiaoIncome() {
+        return fenxiaoIncome;
+    }
+
+    public void setFenxiaoIncome(double fenxiaoIncome) {
+        this.fenxiaoIncome = fenxiaoIncome;
+    }
+
+    public Object getMonthIncome() {
+        return monthIncome;
+    }
+
+    public void setMonthIncome(double monthIncome) {
+        this.monthIncome = monthIncome;
     }
 }

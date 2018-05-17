@@ -9,6 +9,6 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:scaleType="fitCenter"
-        android:src="@drawable/guide" />
+        android:src="@drawable/iv_guide1" />
 
 </LinearLayout>

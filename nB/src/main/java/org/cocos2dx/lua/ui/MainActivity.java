@@ -2,39 +2,32 @@ package org.cocos2dx.lua.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.blankj.utilcode.util.AppUtils;
-import com.maisi.video.obj.video.UpdateEntity;
 import com.umeng.socialize.UMShareAPI;
 import com.zuiai.nn.R;
 
-import org.cocos2dx.lua.APPAplication;
-import org.cocos2dx.lua.DownLoadUtil;
-import org.cocos2dx.lua.service.Service;
+import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.ui.common.CommonPageAdapter;
+import org.cocos2dx.lua.ui.fragment.FindWebFragment;
 import org.cocos2dx.lua.ui.fragment.HomeFragment;
+import org.cocos2dx.lua.ui.fragment.LiveFragment;
 import org.cocos2dx.lua.ui.fragment.PersonFragment2;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 
 /**
@@ -56,10 +49,18 @@ public class MainActivity extends BaseActivity {
     TextView mTvKnow;
     @BindView(R.id.rl_guide)
     RelativeLayout mRlGuide;
+    @BindView(R.id.rb_live)
+    RadioButton rbLive;
+    @BindView(R.id.rb_find)
+    RadioButton rbFind;
+    @BindView(R.id.rl_about)
+    ImageView rlAbout;
     private Unbinder mUnbinder;
     private final String mAboutUrl = "file:///android_asset/about/index.html";
     private Fragment mHomeFragment;
     private Fragment mPersonFragment;
+    private FindWebFragment mVideoFragment;
+    private Fragment mLiveFragment;
     private int currentTabIndex;
     private Fragment[] fragments;
     private RadioButton[] rbBtns;
@@ -95,9 +96,11 @@ public class MainActivity extends BaseActivity {
         mUnbinder = ButterKnife.bind(this);
 
         mHomeFragment = new HomeFragment();
+        mLiveFragment = new LiveFragment();
+        mVideoFragment = new FindWebFragment();
         mPersonFragment = new PersonFragment2();
-        fragments = new Fragment[]{mHomeFragment, mPersonFragment};
-        rbBtns = new RadioButton[]{mRbNiuying, mRbPerson};
+        fragments = new Fragment[]{mHomeFragment, mLiveFragment, mVideoFragment, mPersonFragment};
+        rbBtns = new RadioButton[]{mRbNiuying, rbLive, rbFind, mRbPerson};
         mFragmentContainer.setAdapter(new CommonPageAdapter(getSupportFragmentManager(), Arrays.asList(fragments)));
         mFragmentContainer.setOffscreenPageLimit(fragments.length);
         mFragmentContainer.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -116,20 +119,52 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        mRb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+/*        mRb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_niuying:
                         mFragmentContainer.setCurrentItem(0);
                         break;
-                    case R.id.rb_person:
+                    case R.id.rb_live:
                         mFragmentContainer.setCurrentItem(1);
+                        break;
+                    case R.id.rb_find:
+                        mFragmentContainer.setCurrentItem(2);
+                        mVideoFragment.refreshPage();
+                        break;
+                    case R.id.rb_person:
+                        mFragmentContainer.setCurrentItem(3);
                         break;
                 }
             }
+        });*/
+        mRbNiuying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleCLick(view.getId());
+            }
+        });
+        mRbPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleCLick(view.getId());
+            }
+        });
+        rbLive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleCLick(view.getId());
+            }
+        });
+        rbFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleCLick(view.getId());
+            }
         });
         currentTabIndex = 0;
+        setCurrentTabState(currentTabIndex);
 //guide
 /*        boolean isFirstRun = DataHelper.getBoolSp(this, IS_FIRST_RUN_TIPS, true);
         if(isFirstRun) {
@@ -142,101 +177,34 @@ public class MainActivity extends BaseActivity {
             });
         }
         DataHelper.setBoolSF(this, IS_FIRST_RUN_TIPS, false);*/
-
-        //版本更新
-        Service.getComnonService().versionUpdate()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Toast.makeText(
-                                APPAplication.instance,
-                                "错误:" + throwable.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .subscribe(new Subscriber<UpdateEntity>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(
-                                APPAplication.instance,
-                                e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNext(final UpdateEntity result) {
-                        if (Integer.parseInt(result.getValue1()) > AppUtils.getAppVersionCode()) {
-
-                            MaterialDialog dialog = new MaterialDialog.Builder(MainActivity.this)
-                                    .title("有新版本")
-                                    .content("有最新版本是否立即下载？（强烈推荐下载获取更稳定体验！！）")
-                                    .positiveText("马上下载")
-                                    .negativeText("取消")
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                                            if (result.getValue2() != null) {
-                                                DownLoadUtil downLoadUtil = new DownLoadUtil(MainActivity.this);
-                                                downLoadUtil.downloadAPK(result.getValue2(), "迈思最新版");
-                                            }
-                                        }
-                                    })
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .show();
-
-                            /*new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("有最新版本是否立即下载？（强烈推荐下载获取更稳定体验！！）")
-                                    .setPositiveButton("马上下载",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    if (result.getValue2() != null) {
-                                                        DownLoadUtil downLoadUtil = new DownLoadUtil(MainActivity.this);
-                                                        downLoadUtil.downloadAPK(result.getValue2(), "迈思最新版");
-                                                    }
-                                                }
-                                            })
-                                    .setNegativeButton("取消",
-                                            new DialogInterface.OnClickListener() {
-
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-
-                                                }
-                                            })
-                                    .setOnCancelListener(
-                                            new DialogInterface.OnCancelListener() {
-
-                                                @Override
-                                                public void onCancel(DialogInterface dialog) {
-
-                                                }
-                                            }).show();*/
-
-                        }
-
-                    }
-                });
     }
 
     private void setCurrentTabState(int index) {
-        rbBtns[index].setChecked(true);
         rbBtns[currentTabIndex].setChecked(false);
+        rbBtns[index].setChecked(true);
         currentTabIndex = index;
     }
 
+    private void handleCLick(int id) {
+        switch (id) {
+            case R.id.rb_niuying:
+                mFragmentContainer.setCurrentItem(0);
+                break;
+            case R.id.rb_live:
+                mFragmentContainer.setCurrentItem(1);
+                break;
+            case R.id.rb_find:
+                mFragmentContainer.setCurrentItem(2);
+                mVideoFragment.refreshPage();
+                break;
+            case R.id.rb_person:
+                mFragmentContainer.setCurrentItem(3);
+                break;
+        }
+    }
+
+    @OnClick(R.id.rl_about)
+    public void onViewClicked() {
+        UserModel.getInstance().launchActivity(this, ShareActivity2.class);
+    }
 }

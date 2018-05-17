@@ -11,7 +11,7 @@
         android:name="org.cocos2dx.lua.APPAplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher1"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
@@ -22,13 +22,13 @@
             android:value="cocos2dlua" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5a33355bb27b0a2a9e000116" />
+            android:value="5af30d8e8f4a9d2dc100026a" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="chu_shi" />
 
         <activity
-            android:name="org.cocos2dx.lua.ui.SplashActivity"
+            android:name="org.cocos2dx.lua.ui.GuideActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/OnEmptyTheme"
@@ -47,6 +47,11 @@
             android:hardwareAccelerated="true"
             android:label="@string/app_name">
 
+        </activity>
+        <activity
+            android:name="org.cocos2dx.lua.ui.SplashActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name="org.cocos2dx.lua.ui.PlayActivity"
@@ -73,7 +78,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="org.cocos2dx.lua.ui.DaiLiActivity"
+            android:name="org.cocos2dx.lua.ui.BindZhiFuActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -92,12 +97,76 @@
             android:name="org.cocos2dx.lua.ui.AppUtilsActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="org.cocos2dx.lua.ui.RewardListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.CashActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.RankActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.PromotionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.MyTeamActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.SettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.QuestionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.DaiLiActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.ShouCeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.RewardCenterActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.AboutActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.KeFuActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.SystemMessageActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.ShareActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.cocos2dx.lua.ui.ShareActivity2"
+            android:screenOrientation="portrait" />
+
         <!--wechat-->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.moshi.video.wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.moshi.video.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
         <!--QQ-->
         <activity
             android:name="com.umeng.qq.tencent.AuthActivity"

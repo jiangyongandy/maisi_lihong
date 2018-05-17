@@ -3,6 +3,7 @@ package com.example.test_webview_demo.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,7 +105,7 @@ public class X5WebView extends WebView {
 
 	public X5WebView(Context arg0) {
 		super(arg0);
-		setBackgroundColor(85621);
+		setBackgroundColor(Color.BLACK);
 	}
 
 }

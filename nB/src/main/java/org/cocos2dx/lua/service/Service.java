@@ -5,7 +5,8 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.NetworkUtils;
-import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.zuiai.nn.BuildConfig;
 
 import org.cocos2dx.lua.APPAplication;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,6 +27,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**
  * 功能
@@ -38,6 +39,7 @@ public class Service {
     private static WechatApi api;
     private static CommonApi commonApi;
     private static CommonApi commonApi2;
+    private static String host = "http://39.108.151.95:8000/App/";
 
     //todo 对rx引起的内存泄漏进行处理
     public static WechatApi getWeCHatService() {
@@ -57,10 +59,13 @@ public class Service {
     public static CommonApi getComnonService() {
         if (commonApi == null) {
             initOkHttp();
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://39.108.151.95:8000/App/")
+                    .baseUrl(Service.host)
                     .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .addConverterFactory(new StringConverterFactory())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
@@ -73,7 +78,7 @@ public class Service {
         if (commonApi2 == null) {
             initOkHttp();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://39.108.151.95:8000/App/")
+                    .baseUrl(Service.host)
                     .client(okHttpClient)
                     .addConverterFactory(new StringConverterFactory())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -81,6 +86,20 @@ public class Service {
             commonApi2 = retrofit.create(CommonApi.class);
         }
         return commonApi2;
+    }
+
+    public static WechatApi getComnonServiceForXml() {
+        if (api == null) {
+            initOkHttp();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Service.host)
+                    .client(okHttpClient)
+                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
+            api = retrofit.create(WechatApi.class);
+        }
+        return api;
     }
 
     private static void initOkHttp() {

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffffff</color>
     <color name="gray">#ffABABAB</color>
+    <color name="theme">#fffb1b48</color>
+    <color name="black">#ff000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="gray2">#ffdddddd</color>
+    <color name="txt_gray">#ff7b7b7b</color>
+    <color name="item_team_bg">#fff4f4f4</color>
+    <color name="item_sel_team_bg">#ffffab27</color>
+    <color name="item_sel_txt_team">#ffffffff</color>
+    <color name="item_not_sel_txt_team">#ff000000</color>
 
     <color name="primary">#1296db</color>
     <color name="primaryDark">#ffABABAB</color>

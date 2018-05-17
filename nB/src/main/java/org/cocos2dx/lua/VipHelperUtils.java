@@ -1,6 +1,5 @@
 package org.cocos2dx.lua;
 
-import android.content.Context;
 import android.widget.Toast;
 
 import com.maisi.video.obj.WeiChatUserInfo;
@@ -44,32 +43,50 @@ public class VipHelperUtils {
     private final Random random = new Random();
 
     private String[] apis = {api1, api2, api3, api4, api5, api6, api7, api8, api9, api10, apiYouKu, noAdUrl};
+
+
     /*
-    *            腾讯                 土豆              芒果
-    * pc         container_player     td-player         c-player-video
-    * mobile       vip_player           player          video-area
+    *            腾讯                 土豆              芒果                  SOUHU                   leshi
+    * pc         container_player     td-player         c-player-video      player-content player   video
+    * mobile       vip_player           player          video-area          player-view top-poster  j-player
     *
+    *
+    * 修改了 支持的影视数目 同时注意修改changePlayURLbyPositon
     * */
-    private String[] ids = {"j-player", "vip_player", "m-video-player", "player", "td-player", "c-player-video"
-            , "player-view", "", "", "j-player-layout", "ws_play relative", "player_section"
-            , "playerbox", "player", "", "", "", ""};
+    //每行6个
+    private String[] ids = {
+            "j-player", "vip_player", "m-video-player", "player", "td-player", "video-area"
+            , "player", "", "", "j-player-layout", "ws_play relative", "player_section"
+            , "playerbox", "player", "", "", "", ""
+            ,"","",
+    };
 
-    private String[] names = {"乐视视频", "腾讯视频", "爱奇艺", "优酷视频", "土豆视频", "芒果TV",
+    private String[] names = {
+            "乐视视频", "腾讯视频", "爱奇艺", "优酷视频", "土豆视频", "芒果TV",
             "搜狐视频", "Ac弹幕网", "哔哩哔哩", "风行网", "华数视频", "1905电影",
-            "PPTV", "优酷云C", "糖豆视频", "音悦台", "凤凰视频", "虎牙视频"
+            "PPTV", "优酷云C", "糖豆视频", "音悦台", "凤凰视频", "虎牙视频",
+            "暴风","迅雷看看"
     };
 
-    private String[] urls = {"http://vip.le.com/", "http://m.v.qq.com/", "http://vip.iqiyi.com/", "http://vip.youku.com/", "http://www.tudou.com/category", "http://www.mgtv.com/vip/",
-            "https://film.sohu.com/", "http://www.acfun.tv/", "http://www.bilibili.com/", "http://www.fun.tv/", "http://www.wasu.cn/", "http://www.1905.com/",
-            "http://www.pptv.com/", "http://vip.youku.com/", "http://tv.tangdou.com/", "http://www.yinyuetai.com/", "http://v.ifeng.com/", "http://v.huya.com/"
+    private String[] urls = {
+            "http://m.le.com/", "https://film.qq.com/weixin/all.html", "http://m.iqiyi.com/vip/#1", "http://vip.youku.com/", "http://www.tudou.com/category", "https://m.mgtv.com/sort/3/-a4-----------.html?channelId=3",
+            "https://film.sohu.com/", "http://www.acfun.tv/", "http://www.bilibili.com/", "http://www.fun.tv/", "http://www.wasu.cn/", "http://vip.1905.com/list/p1o6.shtml",
+            "http://www.pptv.com/", "http://vip.youku.com/", "http://tv.tangdou.com/", "http://www.yinyuetai.com/", "http://v.ifeng.com/", "http://v.huya.com/",
+            "http://m.baofeng.com/","http://m.kankan.com/movie.html?order=update",
     };
 
-    private int[] icons = {R.drawable.ic_letv, R.drawable.ic_tencent, R.drawable.ic_aqy, R.drawable.ic_youku, R.drawable.tudoulogo, R.drawable.hunantvlogo
+    private int[] icons = {
+            R.drawable.ic_letv, R.drawable.ic_tencent, R.drawable.ic_aqy, R.drawable.ic_youku, R.drawable.tudoulogo, R.drawable.hunantvlogo
             , R.drawable.sohulogo, R.drawable.acfun, R.drawable.bilibili, R.drawable.fengxing, R.drawable.wasulogo, R.drawable.oneninezerofivelogo
-            , R.drawable.pptv, R.drawable.ykcloud, R.drawable.tangdoulogo, R.drawable.yinyuetailogo, R.drawable.ifenglogo, R.drawable.huya
+            , R.drawable.pptv, R.drawable.ykcloud, R.drawable.tangdoulogo, R.drawable.yinyuetailogo, R.drawable.ifenglogo, R.drawable.huya,
+            R.drawable.ic_baofeng,R.drawable.ic_kankan,
     };
 
-    private int[] homeIndexs = {1,2,3,0,5,12 };
+    private int[] homeIndexs = {
+            1,2,3,5,
+            0,6,18,8,
+            12,11,19,9,
+    };
 
     private int currentPosition = 0;
     private int currentApiIndex = apis.length - 1;
@@ -113,122 +130,6 @@ public class VipHelperUtils {
     private String imgUrl = "file:///android_asset/player.png";
     private String imgAdUrl = "file:///android_asset/iv_ad.png";
     private String imgAdUrl2 = "file:///android_asset/iv_ad.png";
-
-    public String changePlayURLbyPositon(Context context) {
-        String temp = "console.log(\"-------------------------\");";
-       /* if(currentPosition == 6 || currentPosition == 5 || currentPosition == 10 || currentPosition == 4 || currentPosition == 2) {
-            String tempHeight = "400px";
-            if(currentPosition == 6 || currentPosition == 2) {
-                tempHeight = "203px";
-            }
-            temp = "javascript:" +
-                    "\t\t\tvar  elementName=\"=====\";\n" +
-                    "            function countTotalElement(node){\n" +
-                    "                var total=0;\n" +
-                    "                if(node.nodeType==1){\n" +
-                    "                   total++;\n" +
-                    "                   elementName=elementName+node.tagName+\"\\\\r\\\\n\";\n" +
-                    "\t\t\t\t   if(node.className == '" + ids[currentPosition] + "') {\n" +
-                    "console.log(\"找到对应的node------------------\");"+
-                    "\t\t\t\t\t\tvar parent = node.parentNode;\n" +
-                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
-                    "\t\t\t\t\t\tdiv.innerHtml = node.innerHtml;\n" +
-                    "\t\t\t\t\t\tdiv.id = node.id;\n" +
-                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://oufaforwi.bkt.clouddn.com/vs.png);\"\n"+
-                    "\t\t\t\t\t\tdiv.style.width = '100%';\n" +
-                    "\t\t\t\t\t\tdiv.style.height = '"+ tempHeight +"';\n" +
-                    "\t\t\t\t\t\tdiv.onclick = function (){\n" +
-                    "\t\t\t\t\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
-                    "\t\t\t\t\t\t\twindow.jsHook.goToPlayPage(window.location.href)\n" +
-                    "\t\t\t\t\t\t}\n" +
-                    "\t\t\t\t\t\tparent.replaceChild(div, node);\n" +
-                    "\t\t\t\t   }\n" +
-                    "\t\t\t\t}\n" +
-                    "\t\t\t\tvar childrens=node.childNodes;\n" +
-                    "\t\t\t\tfor(var i=0;i<childrens.length;i++){\n" +
-                    "\t\t\t\t\ttotal+=countTotalElement(childrens[i]);\n" +
-                    "\t\t\t\t} \n" +
-                    "\t\t\t\treturn total;\n" +
-                    "\t\t\t}\n" +
-                    "\t\t\tcountTotalElement(document);"
-            ;
-        }else {
-            String tempheight = "203px";
-            if(currentPosition == 3) {
-                tempheight = "400px";
-            }
-            temp = "javascript:" +
-                    "var player = document.getElementById('"+ ids[currentPosition] + "');\n" +
-                    "\t\tvar parent = player.parentNode;\n" +
-                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
-                    "\t\t\t\t\t\tdiv.innerHtml = player.innerHtml;\n" +
-                    "\t\t\t\t\t\tdiv.id = player.id;\n" +
-                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://oufaforwi.bkt.clouddn.com/vs.png);\"\n"+
-                    "\t\tdiv.style.width = '100%';\n" +
-                    "\t\tdiv.style.height = '" + tempheight + "';\n" +
-                    "\t\tdiv.onclick = function (){\n" +
-                    "\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
-                    "       window.jsHook.goToPlayPage(window.location.href)"+
-                    "\t\t} \n" +
-                    "\t\tparent.replaceChild(div, player); "
-            ;
-        }*/
-        return temp;
-    }
-
-    /*public String changePlayURLbyPositon(Context context) {
-        String temp;
-        if(currentPosition == 6 || currentPosition == 5 || currentPosition == 10 || currentPosition == 2 || currentPosition == 4) {
-            temp = "javascript:" +
-                    "\t\t\tvar  elementName=\"=====\";\n" +
-                    "            function countTotalElement(node){\n" +
-                    "                var total=0;\n" +
-                    "                if(node.nodeType==1){\n" +
-                    "                   total++;\n" +
-                    "                   elementName=elementName+node.tagName+\"\\\\r\\\\n\";\n" +
-                    "\t\t\t\t   if(node.className == '" + ids[currentPosition] + "') {\n" +
-                    "console.log(\"找到对应的node------------------\");"+
-                    "\t\t\t\t\t\tvar parent = node.parentNode;\n" +
-                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
-                    "\t\t\t\t\t\tdiv.innerHtml = node.innerHtml;\n" +
-                    "\t\t\t\t\t\tdiv.id = node.id;\n" +
-                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://oufaforwi.bkt.clouddn.com/vs.png);\"\n"+
-                    "\t\t\t\t\t\tdiv.style.width = '100%';\n" +
-                    "\t\t\t\t\t\tdiv.style.height = '400px';\n" +
-                    "\t\t\t\t\t\tdiv.onclick = function (){\n" +
-                    "\t\t\t\t\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
-                    "\t\t\t\t\t\t\twindow.jsHook.goToPlayPage(window.location.href)\n" +
-                    "\t\t\t\t\t\t}\n" +
-                    "\t\t\t\t\t\tparent.replaceChild(div, node);\n" +
-                    "\t\t\t\t   }\n" +
-                    "\t\t\t\t}\n" +
-                    "\t\t\t\tvar childrens=node.childNodes;\n" +
-                    "\t\t\t\tfor(var i=0;i<childrens.length;i++){\n" +
-                    "\t\t\t\t\ttotal+=countTotalElement(childrens[i]);\n" +
-                    "\t\t\t\t} \n" +
-                    "\t\t\t\treturn total;\n" +
-                    "\t\t\t}\n" +
-                    "\t\t\tcountTotalElement(document);"
-            ;
-        }else {
-            temp = "javascript:" +
-                    "var player = document.getElementById('"+ ids[currentPosition] + "');\n" +
-                    "\t\tvar parent = player.parentNode;\n" +
-                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
-                    "\t\t\t\t\t\tdiv.innerHtml = player.innerHtml;\n" +
-                    "\t\t\t\t\t\tdiv.id = player.id;\n" +
-                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://oufaforwi.bkt.clouddn.com/vs.png);\"\n"+
-                    "\t\tdiv.style.width = '100%';\n" +
-                    "\t\tdiv.style.height = '203px';\n" +
-                    "\t\tdiv.onclick = function (){\n" +
-                    "\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
-                    "       window.jsHook.goToPlayPage(window.location.href)"+
-                    "\t\t} \n" +
-                    "\t\tparent.replaceChild(div, player); "
-            ;
-        }
-        return temp;
-    }*/
 
     public String getRealPlaySite() {
         String temp = "javascript:" +
@@ -339,55 +240,6 @@ public class VipHelperUtils {
         );*/
     }
 
-/*    public void changePlayLine(WebView view) {
-
-        //default
-        currentApiIndex++;
-        if(currentApiIndex >= apis.length)
-            currentApiIndex = 0;
-        currentApi = apis[currentApiIndex];
-
-        //other
-        if(otherUrls.size() > 0 ) {
-            otherApiIndex++;
-            if(otherApiIndex >= otherUrls.size())
-                otherApiIndex = 0;
-            currentApi = otherUrls.get(otherApiIndex).getValue1();
-        }
-
-        switch (currentPosition) {
-            //tencet
-            case 1:
-                if(tencentUrls.size() > 0) {
-                    tencentApiIndex++;
-                    if(tencentApiIndex >= tencentUrls.size())
-                        tencentApiIndex = 0;
-                    currentApi = tencentUrls.get(tencentApiIndex).getValue1();
-                }
-                break;
-            //aqy
-            case 2:
-                if(aqyUrls.size() > 0){
-                    aqyApiIndex++;
-                    if(aqyApiIndex >= aqyUrls.size())
-                        aqyApiIndex = 0;
-                    currentApi = aqyUrls.get(aqyApiIndex).getValue1();
-                }
-                break;
-            //youku
-            case 3:
-                if(youkuUrls.size() > 0){
-                    youkuApiIndex++;
-                    if(youkuApiIndex >= youkuUrls.size())
-                        youkuApiIndex = 0;
-                    currentApi = youkuUrls.get(youkuApiIndex).getValue1();
-                }
-                break;
-        }
-//        DataHelper.setIntergerSF(APPAplication.instance, "currentapi", tempPosition);
-        view.loadUrl(currentApi + currentPlayUrl);
-        Log.i("changePlayLine", "changePlayLine-------------"+ currentApi + currentPlayUrl);
-    }*/
 
     public void getNewPlayLine() {
 
@@ -599,6 +451,216 @@ public class VipHelperUtils {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+
+    public void changeThirdVideoPlayBg(WebView webView) {
+        switch (currentPosition){
+            case 6:
+                changeSouhuPlayURLbyPositon(webView);
+                break;
+            case 10:
+                changeHUASHUPlayURLbyPositon(webView);
+                break;
+            default:
+                changePlayURLbyPositon(webView);
+        }
+    }
+
+    public void pingBiAd(WebView webView) {
+        switch (currentPosition){
+            case 5:
+                pingbiMongoAD(webView);
+                break;
+        }
+    }
+
+    public void pingbiMongoAD(WebView webView) {
+        String temp = "javascript:" +
+                "var elementName = \"=====\";\n" +
+                "function countTotalElement(node) {\n" +
+                "    var total = 0;\n" +
+                "    if (node.nodeType == 1) {\n" +
+                "        total++;\n" +
+                "        elementName = elementName + node.tagName + \"\";\n" +
+                "        if (node.className == 'ht') {\n" +
+                "            console.log(\"找到对应的node------------------\");\n" +
+                "            node.style.display=\"none\";\n" +
+                "            return;\n" +
+                "        }\n" +
+                "    }\n" +
+                "    var childrens = node.childNodes;\n" +
+                "    for (var i = 0; i < childrens.length; i++) {\n" +
+                "        total += countTotalElement(childrens[i]);\n" +
+                "    }\n" +
+                "    return total;\n" +
+                "}\n" +
+                "countTotalElement(document);";
+        webView.loadUrl(temp);
+    }
+
+    public String changePlayURLbyPositon(WebView webView) {
+        String temp;
+        if ( currentPosition == 4 || currentPosition == 2|| currentPosition == 5) {
+            String tempHeight = "203px";
+            if (currentPosition == 2 || currentPosition == 5) {
+                tempHeight = "203px";
+            }
+            temp = "javascript:" +
+                    "\t\t\tvar  elementName=\"=====\";\n" +
+                    "            function countTotalElement(node){\n" +
+                    "                var total=0;\n" +
+                    "                if(node.nodeType==1){\n" +
+                    "                   total++;\n" +
+                    "                   elementName=elementName+node.tagName+\"\\\\r\\\\n\";\n" +
+                    "\t\t\t\t   if(node.className == '" + ids[currentPosition] + "') {\n" +
+                    "console.log(\"找到对应的node------------------\");" +
+                    "\t\t\t\t\t\tvar parent = node.parentNode;\n" +
+                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
+                    "\t\t\t\t\t\tdiv.innerHtml = node.innerHtml;\n" +
+//                    "\t\t\t\t\t\tdiv.id = node.id;\n" +
+                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://39.108.151.95:8000/App/image/iv_vipvideo_btn.png);\"\n" +
+                    "\t\t\t\t\t\tdiv.style.width = '100%';\n" +
+                    "\t\t\t\t\t\tdiv.style.height = '" + tempHeight + "';\n" +
+                    "\t\t\t\t\t\tdiv.style.zIndex = '2147483647!important';\n" +
+                    "\t\t\t\t\t\tdiv.onclick = function (){\n" +
+                    "\t\t\t\t\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
+                    "\t\t\t\t\t\t\twindow.jsHook.goToPlayPage(window.location.href)\n" +
+                    "\t\t\t\t\t\t}\n" +
+                    "\t\t\t\t\t\tparent.replaceChild(div, node);\n" +
+                    "\t\t\t\t\t\tparent.appendChild(div);\n" +
+                    "\t\t\t\t   }\n" +
+                    "\t\t\t\t}\n" +
+                    "\t\t\t\tvar childrens=node.childNodes;\n" +
+                    "\t\t\t\tfor(var i=0;i<childrens.length;i++){\n" +
+                    "\t\t\t\t\ttotal+=countTotalElement(childrens[i]);\n" +
+                    "\t\t\t\t} \n" +
+                    "\t\t\t\treturn total;\n" +
+                    "\t\t\t}\n" +
+                    "\t\t\tcountTotalElement(document);"
+            ;
+        } else {
+            String tempheight = "203px";
+/*            if ( currentPosition == 3 ) {
+                tempheight = "400px";
+            }*/
+            temp = "javascript:" +
+                    "var player = document.getElementById('" + ids[currentPosition] + "');\n" +
+                    "\t\tvar parent = player.parentNode;\n" +
+                    "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
+                    "\t\t\t\t\t\tdiv.innerHtml = player.innerHtml;\n" +
+                    "\t\t\t\t\t\tdiv.id = player.id;\n" +
+                    "div.style.cssText =\"\t\tbackground-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://39.108.151.95:8000/App/image/iv_vipvideo_btn.png);\"\n" +
+                    "\t\tdiv.style.width = '100%';\n" +
+                    "\t\tdiv.style.height = '" + tempheight + "';\n" +
+                    "\t\tdiv.style.zIndex = '2147483647!important';\n" +
+                    "\t\tdiv.onclick = function (){\n" +
+                    "\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
+                    "       window.jsHook.goToPlayPage(window.location.href)" +
+                    "\t\t} \n" +
+                    "\t\tparent.replaceChild(div, player); "
+            ;
+        }
+        webView.loadUrl(temp);
+        return temp;
+    }
+
+    public String changeSouhuPlayURLbyPositon(WebView webView) {
+        String temp;
+        String tempHeight = "203px";
+        temp = "javascript:" +
+                "var elementName = \"=====\";\n" +
+                "function countTotalElement(node) {\n" +
+                "    var total = 0;\n" +
+                "    if (node.nodeType == 1) {\n" +
+                "        total++;\n" +
+                "        elementName = elementName + node.tagName + \"\";\n" +
+                "        if (node.className == 'player-view') {\n" +
+                "            console.log(\"找到对应的node------------------\");\n" +
+                "            var parent = node.parentNode;\n" +
+                "            var div = document.createElement('div');\n" +
+                "            div.innerHtml = node.innerHtml;\n" +
+                "            div.id = node.id;\n" +
+                "            div.style.cssText = \"background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://39.108.151.95:8000/App/image/iv_vipvideo_btn.png);\";\n" +
+                "            div.style.width = '100%';\n" +
+                "            div.style.height = '203px';\n" +
+                "            div.onclick = function () {\n" +
+                "                console.log(\"准备跳转播放页-------\");\n" +
+                "                window.jsHook.goToPlayPage(window.location.href)\n" +
+                "            }\n" +
+                "            parent.replaceChild(div, node);\n" +
+                "            return;\n" +
+                "        }\n" +
+                "    }\n" +
+                "    var childrens = node.childNodes;\n" +
+                "    for (var i = 0; i < childrens.length; i++) {\n" +
+                "        total += countTotalElement(childrens[i]);\n" +
+                "    }\n" +
+                "    return total;\n" +
+                "}\n" +
+                "countTotalElement(document);"
+        ;
+        webView.loadUrl(temp);
+        //file:///android_asset/player.png
+        return temp;
+    }
+
+    public String changeHUASHUPlayURLbyPositon(WebView webView) {
+        String temp;
+
+        String tempheight = "203px";
+        temp = "javascript:" +
+                "var player = document.getElementById('pop');\n" +
+                "\t\tvar parent = player.parentNode;\n" +
+                "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
+                "\t\t\t\t\t\tdiv.innerHtml = player.innerHtml;\n" +
+                "\t\t\t\t\t\tdiv.id = player.id;\n" +
+                "div.style.cssText =\"\t\tdisplay: block; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://39.108.151.95:8000/App/image/iv_vipvideo_btn.png);\"\n" +
+                "\t\tdiv.style.width = '100%';\n" +
+                "\t\tdiv.style.height = '" + tempheight + "';\n" +
+                "\t\tdiv.onclick = function (){\n" +
+                "\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
+                "       window.jsHook.goToPlayPage(window.location.href)" +
+                "\t\t} \n" +
+                "\t\tparent.replaceChild(div, player); "
+        ;
+        webView.loadUrl(temp);
+
+        String tempHeight = "203px";
+        temp = "javascript:" +
+                "\t\t\tvar  elementName=\"=====\";\n" +
+                "            function countTotalElement(node){\n" +
+                "                var total=0;\n" +
+                "                if(node.nodeType==1){\n" +
+                "                   total++;\n" +
+                "                   elementName=elementName+node.tagName+\"\\\\r\\\\n\";\n" +
+                "\t\t\t\t   if(node.className == 'ws_play relative') {\n" +
+                "console.log(\"找到对应的node------------------\");" +
+                "\t\t\t\t\t\tvar parent = node.parentNode;\n" +
+                "\t\t\t\t\t\tvar div = document.createElement('div');\n" +
+                "\t\t\t\t\t\tdiv.innerHtml = node.innerHtml;\n" +
+                "\t\t\t\t\t\tdiv.id = node.id;\n" +
+                "div.style.cssText =\"\t\tdisplay: block; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(http://39.108.151.95:8000/App/image/iv_vipvideo_btn.png);\"\n" +
+                "\t\t\t\t\t\tdiv.style.width = '100%';\n" +
+                "\t\t\t\t\t\tdiv.style.height = '" + tempHeight + "';\n" +
+                "\t\t\t\t\t\tdiv.onclick = function (){\n" +
+                "\t\t\t\t\t\t\tconsole.log(\"jjskdfsdfdsjfkdsfj\");\n" +
+                "\t\t\t\t\t\t\twindow.jsHook.goToPlayPage(window.location.href)\n" +
+                "\t\t\t\t\t\t}\n" +
+                "\t\t\t\t\t\tparent.replaceChild(div, node);\n" +
+                "\t\t\t\t   }\n" +
+                "\t\t\t\t}\n" +
+                "\t\t\t\tvar childrens=node.childNodes;\n" +
+                "\t\t\t\tfor(var i=0;i<childrens.length;i++){\n" +
+                "\t\t\t\t\ttotal+=countTotalElement(childrens[i]);\n" +
+                "\t\t\t\t} \n" +
+                "\t\t\t\treturn total;\n" +
+                "\t\t\t}\n" +
+                "\t\t\tcountTotalElement(document);"
+        ;
+        webView.loadUrl(temp);
+
+        return temp;
     }
 
     public String[] getApis() {

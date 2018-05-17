@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Created by Jiang on 2017/11/29.
  */
 
-public class ChargeInfoEntity implements Serializable {
+public class ChargeInfoEntity extends BaseEntity implements Serializable {
 
     /**
      * id : 2

@@ -73,6 +73,7 @@ public class DaiLiActivity extends BaseActivity {
     private EditText  transferAccount;
     private EditText payAccount;
     private EditText payName;
+    private EditText cashNumEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -359,14 +360,6 @@ public class DaiLiActivity extends BaseActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        if (DaiLiActivity.this.result == null) {
-            Toast.makeText(
-                    APPAplication.instance,
-                    "请稍候再试~~",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         MaterialDialog dialog =
                 new MaterialDialog.Builder(this)
                         .title("输入支付宝账号")
@@ -375,21 +368,18 @@ public class DaiLiActivity extends BaseActivity {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                String payAccountS = payAccount.getText().toString();
-                                String payNameS = payName.getText().toString();
-                                if ( payAccountS.length() == 0 || payNameS.length() == 0 ) {
+                                String payAccountS = cashNumEdit.getText().toString();
+                                if ( payAccountS.length() == 0  ) {
                                     Toast.makeText(
                                             APPAplication.instance,
-                                            "请确定账号和实名填写完整~~",
+                                            "请确定提现金额填写完整~~",
                                             Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 CashRequestEntity entity = new CashRequestEntity();
                                 entity.setUid(VipHelperUtils.getInstance().getVipUserInfo().getUid());
-                                entity.setAmount(DaiLiActivity.this.result.getCommend2cash());
+                                entity.setAmount(Double.parseDouble(payAccountS));
                                 entity.setMaisibi(VipHelperUtils.getInstance().getVipUserInfo().getCommendLeft());
-                                entity.setPayeeAccount(payAccountS);
-                                entity.setPyeeRealName(payNameS);
                                 Gson gson = new Gson();
                                 String toJson = gson.toJson(entity);
                                 RequestBody body = RequestBody.create(MediaType.parse("application/json"), toJson);
@@ -419,8 +409,7 @@ public class DaiLiActivity extends BaseActivity {
                         })
                         .build();
         dialog.show();
-        payAccount = dialog.getCustomView().findViewById(R.id.et_pay_account);
-        payName = dialog.getCustomView().findViewById(R.id.et_pay_name);
+        cashNumEdit = dialog.getCustomView().findViewById(R.id.et_pay_account);
     }
 
 

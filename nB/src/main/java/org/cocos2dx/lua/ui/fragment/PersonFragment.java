@@ -35,7 +35,6 @@ import org.cocos2dx.lua.VipHelperUtils;
 import org.cocos2dx.lua.ui.BrowserActivity;
 import org.cocos2dx.lua.ui.PlayActivity;
 
-import static org.cocos2dx.lua.APPAplication.api;
 
 
 public class PersonFragment extends LazyFragment {
@@ -341,49 +340,6 @@ public class PersonFragment extends LazyFragment {
                         Toast.LENGTH_SHORT).show();
 
             } else {
-
-                new AlertDialog.Builder(mActivity)
-                        .setTitle("需要登陆微信")
-                        .setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // send oauth request
-                                        final SendAuth.Req req = new SendAuth.Req();
-                                        req.scope = "snsapi_userinfo";
-                                        req.state = "none";
-                                        boolean sendReq = api.sendReq(req);
-                                        if (sendReq) {
-                                            Log.v(TAG, "sendReq  sendReq ---------------true");
-                                        }
-                                    }
-                                })
-                        .setNegativeButton("否",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                mActivity,
-                                                "拒绝登录无法观看...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                mActivity,
-                                                "取消...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }).show();
 
             }
         }

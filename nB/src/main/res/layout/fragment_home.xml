@@ -9,23 +9,34 @@
         android:id="@+id/navigation1"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:background="#ffffff"
+        android:background="#fb1b48"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            style="@style/title_bar_text"
-            android:text="迈思影视"
-            />
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="#dddddd" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_deco_4" />
+
+            <TextView
+                style="@style/title_bar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="魔视工坊"
+                android:textColor="@color/white"
+                android:textSize="50px" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -44,28 +55,26 @@
             <com.tmall.ultraviewpager.UltraViewPager
                 android:id="@+id/ultra_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="170dp"
                 android:background="#ffffff" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_height="30dp"
                 android:background="#ffffff">
 
                 <LinearLayout
                     android:id="@+id/ll_notify"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginBottom="14dp"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@drawable/notify_bg"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
@@ -75,21 +84,21 @@
 
                     <TextView
                         android:id="@+id/tv_notify"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:duplicateParentState="true"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:gravity="left|center"
+                        android:layout_gravity="center_vertical"
                         android:marqueeRepeatLimit="marquee_forever"
-                        android:maxLines="1"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
-                        android:text=" "
+                        android:text="请留意最新公告哦~~"
                         android:textColor="#000000"
                         android:textSize="12sp" />
+
                 </LinearLayout>
             </FrameLayout>
 
@@ -97,7 +106,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <LinearLayout
                     android:id="@+id/ll_jiaoliu"
@@ -221,12 +232,59 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/sel_common_item_bg"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="14dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_deco_3" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="视频平台"
+                        android:textColor="#000000"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dddddd" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rl_more_catalog"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/sel_common_item_bg"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:paddingLeft="15dp">
 
                 <LinearLayout
@@ -278,13 +336,11 @@
             <org.cocos2dx.lua.ui.widget.NoScrollGridView
                 android:id="@+id/gv_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:horizontalSpacing="5dp"
-                android:numColumns="2"
-                android:stretchMode="columnWidth"
-                android:background="#ffffff"
-                android:verticalSpacing="5dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:horizontalSpacing="1dp"
+                android:numColumns="4"
+                android:verticalSpacing="1dp" />
 
         </LinearLayout>
 

@@ -19,6 +19,7 @@ public class BannerEntity implements Serializable {
      * description : null
      * enable : 1
      * created_time : null
+     *
      */
 
     private int id;
@@ -29,6 +30,15 @@ public class BannerEntity implements Serializable {
     private Object description;
     private int enable;
     private Object created_time;
+    private boolean isAbout;
+
+    public boolean isAbout() {
+        return isAbout;
+    }
+
+    public void setAbout(boolean about) {
+        isAbout = about;
+    }
 
     public int getId() {
         return id;

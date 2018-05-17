@@ -1,9 +1,5 @@
 package org.cocos2dx.lua.ui.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.zuiai.nn.R;
@@ -33,7 +29,7 @@ public class GuideFragment extends BaseFragment {
 
     @Override
     protected int getRootViewLayoutId() {
-        return R.layout.fragment_guide1;
+        return R.layout.fragment_guide;
     }
 
 }

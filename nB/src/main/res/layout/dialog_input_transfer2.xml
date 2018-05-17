@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="25dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:text="请确定填写正确哦~~"/>
+
+    <EditText
+        android:id="@+id/et_pay_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="输入提现金额"
+        android:inputType="number"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+<!--    <EditText
+        android:id="@+id/et_pay_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="输入支付宝实名认证"
+        android:textColor="#000000"
+        android:textSize="16sp" />-->
+
+</LinearLayout>

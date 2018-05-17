@@ -2,9 +2,12 @@ package org.cocos2dx.lua.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +37,11 @@ import org.cocos2dx.lua.VipHelperUtils;
 import org.cocos2dx.lua.model.UserModel;
 import org.cocos2dx.lua.service.Service;
 import org.cocos2dx.lua.service.UrlConnect;
+import org.cocos2dx.lua.ui.BindZhiFuActivity;
 import org.cocos2dx.lua.ui.BrowserActivity;
-import org.cocos2dx.lua.ui.DaiLiActivity;
 import org.cocos2dx.lua.ui.MoreCatalogActivity;
+import org.cocos2dx.lua.ui.PlayActivity;
+import org.cocos2dx.lua.ui.ShareActivity2;
 import org.cocos2dx.lua.ui.widget.BannerPageAdapter;
 import org.cocos2dx.lua.ui.widget.NoScrollGridView;
 import org.cocos2dx.lua.ui.widget.holder.CBViewHolderCreator;
@@ -155,7 +160,7 @@ public class HomeFragment extends BaseFragment {
     };
     private BannerPageAdapter adapter;
 
-    @OnClick({R.id.ll_jiaoliu,  R.id.ll_share, R.id.ll_charge, R.id.ll_recommend, R.id.rl_more_catalog})
+    @OnClick({R.id.ll_jiaoliu, R.id.ll_share, R.id.ll_charge, R.id.ll_recommend, R.id.rl_more_catalog})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_jiaoliu:
@@ -207,7 +212,7 @@ public class HomeFragment extends BaseFragment {
                 HomeFragment.this.startActivity(testIntent);
                 break;
             case R.id.ll_recommend:
-                Intent intent3 = new Intent(getActivity(), DaiLiActivity.class);
+                Intent intent3 = new Intent(getActivity(), BindZhiFuActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.rl_more_catalog:
@@ -266,6 +271,9 @@ public class HomeFragment extends BaseFragment {
                         public void onNext(ArrayList<BannerEntity> result) {
                             bannerList.clear();
                             bannerList.addAll(result);
+                            BannerEntity bannerEntity = new BannerEntity();
+                            bannerEntity.setAbout(true);
+                            bannerList.add(bannerEntity);
                             CBViewHolderCreator<NetworkImageHolderView> cbViewHolderCreator = new CBViewHolderCreator<NetworkImageHolderView>() {
                                 @Override
                                 public NetworkImageHolderView createHolder() {
@@ -275,11 +283,27 @@ public class HomeFragment extends BaseFragment {
                             mUltraViewpager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
                             adapter = new BannerPageAdapter<>(cbViewHolderCreator, bannerList);
                             mUltraViewpager.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                            mUltraViewpager.setMultiScreen(0.9f);
+
+                            //内置indicator初始化
+                            mUltraViewpager.initIndicator();
+                            //设置indicator样式
+                            float dimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+                            mUltraViewpager.getIndicator()
+                                    .setOrientation(UltraViewPager.Orientation.HORIZONTAL)
+                                    .setFocusColor(Color.WHITE)
+                                    .setNormalColor(Color.GRAY)
+                                    .setMargin((int) dimension, (int) dimension, (int) dimension, (int) dimension)
+                                    .setRadius((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+                            //设置indicator对齐方式
+                            mUltraViewpager.getIndicator().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+                            //构造indicator,绑定到UltraViewPager
+                            mUltraViewpager.getIndicator().build();
+
+                            mUltraViewpager.setMultiScreen(1f);
                             mUltraViewpager.setAutoMeasureHeight(true);
                             mUltraViewpager.setInfiniteLoop(true);
                             mUltraViewpager.setAutoScroll(BANNER_LOOP_TIME);
+                            adapter.notifyDataSetChanged();
 
                         }
                     });
@@ -356,135 +380,15 @@ public class HomeFragment extends BaseFragment {
     private void wechatLogin(int position) {
         VipHelperUtils.getInstance().changeCurrentSite(position);
         //test
-        if (CommonConstant.isDebug) {
+/*        if (CommonConstant.isDebug) {
 
             Intent testIntent = new Intent(mActivity, BrowserActivity.class);
             HomeFragment.this.startActivity(testIntent);
             return;
-        }
+        }*/
 
         UserModel.getInstance().launchActivity(getActivity(), BrowserActivity.class, true);
 
-        /*if (VipHelperUtils.getInstance().isWechatLogin()) {
-
-            Service.getComnonService().requestLogin(VipHelperUtils.getInstance().getVipUserInfo().getUid())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError(new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            Toast.makeText(
-                                    APPAplication.instance,
-                                    "错误:" + throwable.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .subscribe(new Subscriber<UserInfoEntity>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Toast.makeText(
-                                    APPAplication.instance,
-                                    e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onNext(UserInfoEntity result) {
-                            result.setWeiChatUserInfo(VipHelperUtils.getInstance().getVipUserInfo().getWeiChatUserInfo());
-                            VipHelperUtils.getInstance().setVipUserInfo(result);
-                            EventBus.getDefault().post(result, EventBusTag.TAG_LOGIN_SUCCESS);
-                            if (result.getVipLeft() > 0) {
-                                VipHelperUtils.getInstance().setValidVip(true);
-                                Intent testIntent = new Intent(mActivity, BrowserActivity.class);
-                                HomeFragment.this.startActivity(testIntent);
-
-                            } else {
-                                VipHelperUtils.getInstance().setValidVip(false);
-                                new AlertDialog.Builder(mActivity)
-                                        .setTitle("VIP已过期不能愉快的观看啦，是否前往充值？")
-                                        .setPositiveButton("立即充值",
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        UserModel.getInstance().launchActivity(mActivity, ChargeActivity.class);
-                                                    }
-                                                })
-                                        .setNegativeButton("稍等",
-                                                new DialogInterface.OnClickListener() {
-
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        Toast.makeText(
-                                                                mActivity,
-                                                                "取消...",
-                                                                Toast.LENGTH_SHORT).show();
-                                                    }
-                                                })
-                                        .setOnCancelListener(
-                                                new DialogInterface.OnCancelListener() {
-
-                                                    @Override
-                                                    public void onCancel(DialogInterface dialog) {
-                                                        Toast.makeText(
-                                                                mActivity,
-                                                                "取消...",
-                                                                Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }).show();
-                            }
-                        }
-                    });
-        } else {
-
-            if (!CommonConstant.isRelease) {
-                VipHelperUtils.getInstance().setWechatLogin(true);
-                VipHelperUtils.getInstance().setValidVip(true);
-                Intent intent = new Intent(mActivity, BrowserActivity.class);
-                HomeFragment.this.startActivity(intent);
-                return;
-            }
-            new AlertDialog.Builder(mActivity)
-                    .setTitle("需要登陆")
-                    .setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    UserModel.getInstance().login(mActivity);
-                                }
-                            })
-                    .setNegativeButton("否",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    Toast.makeText(
-                                            mActivity,
-                                            "拒绝登录无法观看...",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                    .setOnCancelListener(
-                            new DialogInterface.OnCancelListener() {
-
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    Toast.makeText(
-                                            mActivity,
-                                            "取消...",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }).show();
-
-        }*/
     }
 
     /****************
@@ -540,15 +444,15 @@ public class HomeFragment extends BaseFragment {
             View rootView = convertView;
             ViewHolder holder = null;
             if (convertView == null) {
-                rootView = inflater.inflate(R.layout.list_menu_item, parent, false);
-                holder = new ViewHolder();
-                holder.textView = (TextView) rootView.findViewById(R.id.iv_icon);
+                rootView = inflater.inflate(R.layout.list_home_video_item, parent, false);
+                holder = new ViewHolder(rootView);
+                holder.ivIcon = (TextView) rootView.findViewById(R.id.iv_icon);
                 holder.ivLogo = (ImageView) rootView.findViewById(R.id.iv_logo);
                 rootView.setTag(holder);
             } else {
                 holder = (ViewHolder) rootView.getTag();
             }
-            holder.textView.setText(VipHelperUtils.getInstance().getNames()[indexs[position]]);
+            holder.ivIcon.setText(VipHelperUtils.getInstance().getNames()[indexs[position]]);
             Drawable drawable = context.getResources().getDrawable(VipHelperUtils.getInstance().getIcons()[indexs[position]]);
 //                holder.textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
             holder.ivLogo.setImageDrawable(drawable);
@@ -556,10 +460,15 @@ public class HomeFragment extends BaseFragment {
         }
 
         class ViewHolder {
-            TextView textView;
+            @BindView(R.id.iv_logo)
             ImageView ivLogo;
-        }
+            @BindView(R.id.iv_icon)
+            TextView ivIcon;
 
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+        }
     }
 
     /**
@@ -579,20 +488,40 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public void UpdateUI(final Context context, final int position, final BannerEntity entity) {
-            if (entity.getValue1() != null) {
+            if (entity.isAbout()) {
+                Glide.with(HomeFragment.this)
+                        .load(R.drawable.ic_deco_2)
+                        .into(imageView);
+                //广告栏点击事件
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        UserModel.getInstance().launchActivity(getActivity(), ShareActivity2.class);
+                    }
+                });
+            } else {
+
                 Glide.with(HomeFragment.this)
                         .load((CommonConstant.isRelease ? UrlConnect.ImageServer : "") + entity.getValue1())
                         .into(imageView);
+                //广告栏点击事件
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (entity.getDescription().equals("2")) {
+                            Intent intent = new Intent(getActivity(), PlayActivity.class);
+                            intent.putExtra("URL", (String) entity.getValue2());
+                            VipHelperUtils.getInstance().setCurrentPlayUrl((String) entity.getValue2());
+                            getActivity().startActivity(intent);
+                        } else if (entity.getDescription().equals("1")) {
+                            Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                            intent.setData(Uri.parse((String) entity.getValue2()));
+                            getActivity().startActivity(intent);
+                        }
+                    }
+                });
             }
-            //广告栏点击事件
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    Intent intent = new Intent(getActivity(), InformationDetailsActivity.class);
-//                    intent.putExtra("ID", entity.getInformationTextID());
-//                    startActivity(intent);
-                }
-            });
+
         }
 
     }
